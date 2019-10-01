@@ -1,0 +1,27 @@
+L'absence de redondance est souvent un gage de qualité pour un code
+source. En effet, lorsqu'un fragment de code est répété, ses
+imperfections -- pour ne pas dire ses erreurs -- le sont elles-aussi.
+
+Seulement, il arrive parfois que l'on constate de la redondance dans
+un grand corpus de code, typiquement quand ce corpus a été construit
+par des développeurs ne communiquant peu ou pas du tout entre
+eux. Deux instances de cette situation nous intéressent
+particulièrement : l'ensemble des codes sources des paquets OPAM et
+l'ensemble des copies d'étudiants répondant tous aux mêmes questions
+de programmation. Comment partitionner leurs définitions en fonction
+de leur ``similarité''?
+
+Dans cet article, nous proposons un outil de partitionnement
+automatique d'un ensemble de définitions écrites en OCaml. Cet outil
+s'appuie sur une fonction dédiée de ``hachage'' des arbres de syntaxe
+du langage intermédiaire Lambda ainsi que sur un algorithme de
+classification hiérarchique classique que nous avons adapté à notre
+usage.
+
+Cet outil prend la forme d'une bibliothèque nommée Asak disponible sur
+OPAM. Nous l'avons utilisé d'une part pour partitionner
+automatiquement les réponses d'étudiants qui apprennent OCaml en
+utilisant la plateforme LearnOCaml, et d'autre part, pour détecter des
+redondances sur l'ensemble des codes sources des paquets OPAM
+disponibles aujourd'hui. Nous évaluons les résultats obtenus
+et formulons les limites de notre approche.
