@@ -1,1 +1,64 @@
 %!TEX root = root.tex
+
+Une première approche est de partitionner une liste de code selon la fonction de hash: deux codes sont équivalents s'ils partagent exactement la même liste de hash. Cependant, cela ne permet pas de détecter que deux codes sont "proches". Par exemple, avec
+
+\begin{minted}{OCaml}
+let id1 x = print_endline "debug"; x
+let id2 x = x
+\end{minted}
+
+\verb|id1| et \verb|id2| n'ont pas la même liste de hash (et nous ne voulons pas qu'ils l'aient), mais nous voudrions quand même détecter que les deux codes se ressemblent. Nous sommes donc revenu à généraliser la partition des codes selon leur hash en une partition selon une mesure de similarité entre codes: il s'agit de faire faire un clustering.
+
+De nombreuses méthodes de clustering existent. Ne connaissant pas a priori le nombre de classes recherchées, nous avons décidé de nous orienter vers un clustering hiérarchique agglomératif: on regroupe les deux classes les plus proches (typiquement dans un arbre appelé dendrogramme), puis on répète l'opération jusqu'à n'avoir qu'une seule grande classe.
+
+Nous introduisons cependant une légère variante: notre algorithme retourne une liste de classe infiniment distante. En effet, nous ne voulons pas regrouper tous les codes en une unique classe d'équivalence.
+
+Nous devons donc définir deux choses:
+\begin{itemize}
+\item La distance entre deux listes de hash.
+\item La distance entre deux classes de liste de hash.
+\end{itemize}
+
+\subsection{Notation}
+On notera:
+
+\begin{itemize}
+\item $H = \mathbb{N} \times 2^{128}$
+\item $List_n(X)$ les listes de tailles $n \in \mathbb{N}$ d'éléments de $X$
+\item $List_*(X) = \cup_{n\in\mathbb{N}}\ List_n(X)$
+\end{itemize}
+
+
+\subsection{Distance entre deux listes de hash}
+Il nous faut définir une distance, ou plus précisément une mesure de dissimilarité entre deux listes de hash.
+
+$$
+d : List_n(H) \times List_m(H) \to \mathbb{N} \cup \{\infty\}
+$$
+\[
+d (X,Y) =
+\begin{cases}
+	\infty & \text{si $X \cap Y = \emptyset$} \\
+	\sum\limits_{h \in X \Delta Y} (fst\ h) & \text{sinon}
+\end{cases}
+\]
+
+%todo Proprement définir la notion de différence symmétrique pour deux listes
+Où $X \Delta Y$ est la différence symétrique entre deux listes $X$ et $Y$.
+
+Si deux listes ne partagent pas un seul hash, elles sont donc infiniment distantes. Sinon, on somme le poids des arbres qu'elles n'ont pas en commun.
+
+Il est facile de voir que $d$ est une fonction de séparation ($\forall X,Y,\ d(X,Y) = 0 \iff X = Y$) et symétrique ($\forall X,Y,\ d(X,Y) = d(Y,X)$). Elle ne respecte cependant pas l'inégalité triangulaire et n'est pas donc une distance.
+
+
+\subsection{Distance entre deux classes de liste de hash}
+Il existe ici plusieurs approches.
+%todo Pourquoi celle-ci ?
+Nous avons décidé d'étendre $d$ à:
+
+\begin{align*}
+d &: \mathcal{P}(List_*(H)) \times \mathcal{P}(List_*(H)) \to \mathbb{N} \cup \{\infty\}\\
+d(\alpha,\beta) &= \max\limits_{X \in \alpha, Y \in \beta} d(X,Y)
+\end{align*}
+
+Cette approche est classique et donne lieu à un \emph{complete linkage clustering}.
