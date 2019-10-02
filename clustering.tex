@@ -9,7 +9,7 @@ let id2 x = x
 
 \verb|id1| et \verb|id2| n'ont pas la même liste de hash (et nous ne voulons pas qu'ils l'aient), mais nous voudrions quand même détecter que les deux codes se ressemblent. Nous sommes donc revenu à généraliser la partition des codes selon leur hash en une partition selon une mesure de similarité entre codes: il s'agit de faire faire un clustering.
 
-De nombreuses méthodes de clustering existent. Ne connaissant pas a priori le nombre de classes recherchées, nous avons décidé de nous orienter vers un clustering hiérarchique agglomératif: on regroupe les deux classes les plus proches (typiquement dans un arbre appelé dendrogramme), puis on répète l'opération jusqu'à n'avoir qu'une seule grande classe.
+De nombreuses méthodes de clustering existent. Ne connaissant pas a priori le nombre de classes recherchées, nous avons décidé de nous orienter vers un clustering hiérarchique agglomératif: on regroupe les deux classes les plus proches (typiquement dans un arbre appelé dendrogramme) puis on répète l'opération jusqu'à n'avoir qu'une seule grande classe.
 
 Nous introduisons cependant une légère variante: notre algorithme retourne une liste de classe infiniment distante. En effet, nous ne voulons pas regrouper tous les codes en une unique classe d'équivalence.
 
@@ -62,3 +62,35 @@ d(\alpha,\beta) &= \max\limits_{X \in \alpha, Y \in \beta} d(X,Y)
 \end{align*}
 
 Cette approche est classique et donne lieu à un \emph{complete linkage clustering}.
+
+\subsection{Algorithme}
+L'algorithme de clustering est le suivant:
+
+\begin{minted}{OCaml}
+type distance = Infinity | Regular of int
+type hash
+type cluster
+
+(* Groupe les noms ayant le même hash *)
+val group_by_hash : (name * hash) list -> (hash * name list) list
+(* Crée un cluster singleton *)
+val singleton : (hash * name list) -> cluster
+(* Renvoie les deux clusters les plus proches selon d, ainsi que leur distance *)
+val get_closest_with_d : cluster list -> (distance * (cluster * cluster))
+(* Fusionne deux clusters *)
+val merge : cluster -> cluster -> cluster list -> cluster list
+
+(* Renvoie une liste de cluster deux à deux infiniment distants *)
+let rec run_clustering xs =
+  match xs with
+  | [] | [_] -> xs
+  | _ ->
+    let (p, (u,v)) = get_closest_with_d xs in
+    match p with
+    | Infinity -> xs
+    | Regular p -> run_clustering (merge u v xs)
+
+let cluster (hash_list : (name * hash) list) : cluster list =
+  List.map singleton (group_by_hash hash_list)
+  |> run_clustering start_cluster
+\end{minted}
