@@ -79,6 +79,7 @@ let rec run_clustering xs =
     | Regular p -> run_clustering (merge u v xs)
 
 let cluster (hash_list : (name * hash) list) : cluster list =
-  List.map singleton (group_by_hash hash_list)
-  |> run_clustering start_cluster
+  run_clustering @@
+    List.map singleton @@
+      group_by_hash hash_list
 \end{minted}
