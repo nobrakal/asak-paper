@@ -1,1 +1,37 @@
 %!TEX root = root.tex
+
+\subsection{Lambda}
+
+\subsection{Transformation de lambda}
+
+\subsubsection{$\alpha$-renommage}
+
+Le nom des variables sera pris en compte lors du hash de la structure. Il est donc important de s'assurer que les noms de variables liées (par exemple lors d'une définition de fonction) ne jouent aucun rôle.
+C'est pourquoi nous faisons une itération sur chaque arbre Lambda afin de renommer les variables liées selon leur position.
+
+\subsubsection{Inlining agressif}
+
+L'arbre Lambda vient avec des informations sur les définitions \verb|let| et notamment si elles peuvent être inliné (c'est-à-dire remplacée par leur définition).
+
+Nous inlinons donc toutes les définitions possibles.
+
+\subsection{Notation}
+On notera:
+
+\begin{itemize}
+	\item $H = \mathbb{N} \times 2^{128}$. Cela permet de représenter les couples poids/hash.
+	\item $List_n(X)$ les listes de taille $n \in \mathbb{N}$ d'éléments de $X$
+	\item $List_*(X) = \cup_{n\in\mathbb{N}}\ List_n(X)$
+\end{itemize}
+
+\subsection{La fonction de hash}
+Nous suivons ici la méthodologie donnée par Chilowicz et al. \cite{chilowicz:hal-00627811}: nous allons définir récursivement une fonction de hash pour les arbres Lambda qui renverra aussi les hashs des sous-arbre ainsi que leurs poids.
+
+La fonction de hash est donc de type $hash : Lambda \to List_*(H)$.
+
+%todo Pourquoi ?
+Les hashs "atomiques" sont fait à l'aide de MD5.
+
+\subsection{Comment combiner des hash}
+
+\subsection{Comment hasher les feuilles}

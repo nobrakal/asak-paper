@@ -19,29 +19,17 @@ Nous devons donc définir deux choses:
 \item La distance entre deux classes de liste de hash.
 \end{itemize}
 
-\subsection{Notation}
-On notera:
-
-\begin{itemize}
-\item $H = \mathbb{N} \times 2^{128}$
-\item $List_n(X)$ les listes de tailles $n \in \mathbb{N}$ d'éléments de $X$
-\item $List_*(X) = \cup_{n\in\mathbb{N}}\ List_n(X)$
-\end{itemize}
-
-
 \subsection{Distance entre deux listes de hash}
 Il nous faut définir une distance, ou plus précisément une mesure de dissimilarité entre deux listes de hash.
 
-$$
-d : List_n(H) \times List_m(H) \to \mathbb{N} \cup \{\infty\}
-$$
-\[
-d (X,Y) =
+\begin{align*}
+d &: List_n(H) \times List_m(H) \to \mathbb{N} \cup \{\infty\} \\
+d (X,Y) &=
 \begin{cases}
 	\infty & \text{si $X \cap Y = \emptyset$} \\
 	\sum\limits_{h \in X \Delta Y} (fst\ h) & \text{sinon}
 \end{cases}
-\]
+\end{align*}
 
 %todo Proprement définir la notion de différence symmétrique pour deux listes
 Où $X \Delta Y$ est la différence symétrique entre deux listes $X$ et $Y$.
