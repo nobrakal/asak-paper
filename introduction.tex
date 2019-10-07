@@ -1,10 +1,147 @@
 %!TEX root = root.tex
 
-\subsection{Contributions}
-\begin{itemize}
-\item Hash $ \lambda$
-\item Clustering
-\item Asak
-\item LearnOCaml
-\item Ananlyse des paquets opam
-\end{itemize}
+``Ne vous répétez pas!'' est une injonction permanente qui plane au
+dessus de tout programmeur cherchant à écrire un logiciel de qualité.
+Ce principe vise une situation idéale où une connaissance donnée n'a
+qu'une seule représentation dans le logiciel : si cette connaissance
+est imparfaite -- et c'est souvent le cas -- on s'assure alors qu'elle
+pourra être corrigée efficacement.
+
+Il arrive parfois qu'un corpus de code source contienne des
+redondances que les programmeurs n'ont pas pu ou pas voulu éviter. Par
+exemple, certaines fonctions utilitaires absentes de la bibliothèque
+standard sont ainsi réimplémentées à de multiples reprises par de
+nombreux paquets logiciels. L'implémentation de ces fonctions
+utilitaires répétées sont parfois identiques aux caractères près ;
+parfois, elles sont seulement très proches (à quelques renommages près
+ou plus généralement, à quelques réécritures ``bénignes''
+près). Ainsi, si l'on utilise deux bibliothèques indépendantes pour
+construire un logiciel donné, il y a une probabilité non nulle que
+l'on retrouve dans l'exécutable final plusieurs implémentations
+quasi-identiques de la même fonction. Ne serait-il pas plus
+raisonnable d'introduire une bibliothèque commune offrant une unique
+implémentation de ces fonctions répétées?
+
+Il y a aussi des redondances dont les programmeurs non pas conscience.
+En effet, on peut parfaitement appliquer ``la tête dans le guidon''
+des schémas de calcul généraux en les spécialisant à des arguments
+particuliers, au cas par cas, sans réaliser les opportunités de
+factorisation qui découleraient de l'introduction d'une fonction
+d'ordre supérieur bien choisie. C'est seulement lorsque les
+développeurs prennent un peu de recul qu'ils s'aperçoivent qu'une
+factorisation du code source est possible. Ne serait-il pas plus
+raisonnable d'alerter le programmeur à la minute même où il introduit
+un fragment de code qui est fortement similaire à un autre fragment
+préexistant, soit dans son propre code, soit dans une autre
+bibliothèque?
+
+Lorsqu'un corpus est formé de réponses d'étudiants à des questions
+identiques de programmation, il y a fort à parier que plusieurs
+étudiants répondront de façon similaire à une question donnée, soit
+parce qu'ils ont trouvé une réponse ``naturelle'', soit parce qu'ils
+ont commis des erreurs de raisonnement ou de conception classiques.
+Pour l'enseignant face à plusieurs centaines de réponses, il n'est pas
+toujours évident de réaliser quelles sont les classes
+qui partitionnent pertinemment l'ensemble de ces réponses. Lui
+apporter un tel partitionnement serait un outil précieux car il
+lui permettrait de différencier sa pédagogie en fonction des
+groupes de réponses fausses les plus courantes.
+
+Pour répondre à ces trois cas d'usage, il faudrait tout d'abord que
+l'on sache évaluer la ``similarité'' entre deux fragments de
+code. Mais qu'entend-on exactement par similarité? Peut-on
+formaliser cette notion et la réaliser calculatoirement?
+
+Notons tout d'abord que nous avons utilisé le terme de similarité et
+non d'équivalence. En effet, la notion d'équivalence (syntaxique,
+définitionnelle ou observationnelle) est trop ``binaire'' pour notre
+cadre : nous cherchons une mesure qui rapproche des calculs qui se
+ressemblent même s'ils ne se comportent pas tout à fait de la même
+façon calculatoirement. En d'autres termes, nous cherchons des
+fragments de programme qui ont des structures syntaxiques proches et
+qui s'appuient sur des ingrédients similaires plutôt que des fragments
+de programme ne pouvant pas être distingués par des contextes
+d'évaluation.
+
+Ainsi, deux termes égaux syntaxiquement sont absolument similaires.
+Deux termes qui diffèrent par un renommage sont très similaires sans
+être syntaxiquement égaux. Deux analyses par motifs sont plus ou
+moins similaires en fonction des cas d'analyse qu'elles traitent
+de façon similaire. Par contre, les implémentations de deux
+algorithmes de tri distincts sont en général dissimilaires
+même si l'équivalence observationnelle ne permet pas de les
+distinguer\footnote{Bien entendu, on suppose ici
+un langage de programmation incapable d'observer finement
+les exécutions des deux algorithmes.}.
+
+La similarité semble donc être une notion très syntaxique mais qui
+cherche paradoxalement à faire peu de cas de certains détails
+d'écriture qui ne changent pas fondamentalement le programme que l'on
+a écrit. De toute évidence, toutes les différences purement textuelles
+(commentaires, indentations, ...) doivent être ignorées par une bonne
+notion de similarité. Le renommage des variables liées est aussi un
+exemple canonique de tels détails syntaxiques anodins. Plus
+généralement, toute transformation locale et purement syntaxique,
+i.e. toute élimination de sucre syntaxique, semble aussi rentrer dans
+cette catégorie des ``détails syntaxiques''. Où s'arrêter dans ce
+processus de simplification des termes? Devrait-on par exemple aller
+jusqu'à comparer les codes machines obtenus par compilation des termes
+sources? Cette démarche conduirait sans doute à un échec puisque le
+jeu de la sélection d'instructions et des différentes optimisations
+peut mener deux termes sources proches à des codes machines très différents
+et fourmillant de nouveaux détails peu importants (pensez à la
+diversité des instructions d'une architecture comme x86-64). Il faut
+donc trouver le langage intermédiaire offrant un bon niveau
+d'abstraction pour éliminer à la fois les détails syntaxiques
+du langage source et les détails de bas-niveau de l'architecture cible.
+
+La première contribution de cet article est de considérer que les
+premières passes du compilateur {\OCaml}, celles menant de sa syntaxe
+concrète au code {\LambdaCode}, éliminent la plupart des détails
+syntaxiques des termes {\OCaml} pour ne garder que leurs ingrédients
+calculatoires principaux. Nous analyserons les avantages
+(sections~\ref{sec:partition} et \ref{sec:redundancy}) et les
+limitations (section~\ref{sec:limitations}) de ce choix de conception.
+
+Comme son nom l'indique, {\LambdaCode} est un $\lambda$-calcul
+(légèrement étendu). Nous nous sommes donc moralement ramené au
+problème de la construction d'une mesure de dissimilarité syntaxique
+entre deux termes du $\lambda$-calcul. En utilisant une représentation
+de De Bruijn et en effectuant quelques réductions inoffensives, on
+gomme effectivement de cette façon certaines différences sans intérêt
+entre deux termes {\OCaml}. Seulement, pour pouvoir comparer
+rapidement des milliers de $\lambda-$termes deux-à-deux, on doit se
+donner une représentation compacte des $\lambda$-termes. Nous
+introduisons donc un prétraitement des $\lambda$-termes pour calculer
+leurs \textit{empreintes} respectives : l'empreinte d'un
+$\lambda$-terme est un ensemble d'entiers qui caractérisent ses
+aspects syntaxiques importants. C'est une idée déjà présente dans la
+littérature mais nous la raffinons pour l'appliquer sur des
+$\lambda$-termes.  La définition de ce prétraitement sur des
+$\lambda$-termes est donc la seconde contribution présentée par cet
+article.
+
+À ce stade, on peut donc mesurer la dissimilarité entre chaque paire de termes
+d'un corpus. L'ensemble de ces mesures constitue une grande quantité
+d'information difficilement exploitable directement, en tout cas pour
+nos cas d'usage. En particulier, cette mesure n'étant pas une
+distance, elle ne fournit pas d'emblée une structure hiérarchique sur
+laquelle s'appuyer pour synthétiser des indicateurs généraux. Pour
+pallier à ce problème, nous proposons de partitionner hiérarchiquement
+les termes en s'appuyant sur leur mesure de dissimilarité
+(section~\ref{sec:clustering}). Encore une fois, notre contribution
+consiste à raffiner un algorithme déjà présent dans la littérature, la
+classification ascendante hiérarchique. Cette classification produit
+des dendrogrammes, particulièrement adaptés à l'exploration des
+classes de programmes issues de nos corpus.
+
+Pour que notre travail soit réutilisable dans des situations
+différentes de nos cas d'usage, nous avons développé une bibliothèque
+nommée {\Asak}\footnote{Asak est une mélodie touareg régulièrement répétée
+lors des fêtes traditionnelles. \yrg{Alexandre, je ne dis pas de bêtise?}}.
+Cette bibliothèque est librement disponible sous la forme d'un paquet {\Opam}.
+Elle nous a permis d'introduire un système de classification automatique
+des copies dans {\LearnOCaml} (section~\ref{sec:partition}). Elle nous a
+aussi permis d'implémenter un outil de recherche de redondance dans
+l'ensemble des paquets {\Opam} (section~\ref{sec:redundancy}). Ces outils
+constituent la dernière contribution présentée par cet article.
