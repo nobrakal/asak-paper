@@ -1,11 +1,38 @@
 \newcommand\yrg[1]{\textcolor{red}{YRG: #1}}
 \newcommand\am[1]{\textcolor{blue}{AM: #1}}
 
+% Layout
 \newcommand\many[1]{\overline{#1}}
 \newcommand\tuple[2]{\many{#2}^{#1}}
+\newcommand\legend[1]{\qquad\textit{#1}}
 
+% Names
 \newcommand\OCaml{\textsc{OCaml}}
 \newcommand\LambdaCode{\textsc{Lambda}}
 \newcommand\Asak{\textsc{Asak}}
 \newcommand\Opam{\textsc{OPAM}}
 \newcommand\LearnOCaml{\textsc{LearnOCaml}}
+
+% Syntax
+\newcommand\term{t}
+\newcommand\binding{b}
+\newcommand\branch{\gamma}
+\newcommand\var{x}
+\newcommand\const{c}
+\newcommand\nat{n}
+\newcommand\apply[2]{#1 (#2)}
+\newcommand\lam[2]{\lambda #1. #2}
+\newcommand\tlet[2]{\textbf{let }#1 \textbf{ in } #2}
+\newcommand\tletrec[2]{\textbf{let rec }#1 \textbf{ in } #2}
+\newcommand\primitive{\delta}
+\newcommand\switch[4]{\textbf{switch } #1 \;\{\, #2; #3; #4 \,\}}
+\newcommand\staticraise[2]{\textbf{staticraise } #1 (#2)}
+\newcommand\staticcatch[4]{\textbf{statictry } #1 \textbf{ with } #2 (#3) \rightarrow #4}
+\newcommand\trywith[3]{\textbf{try } #1 \textbf{ with } #2 \rightarrow #3}
+\newcommand\tifthenelse[3]{\textbf{if } #1 \textbf{ then } #2 \textbf{ else } #3}
+\newcommand\twhile[2]{\textbf{while } #1 \textbf{ do } #2 \textbf{ done }}
+\newcommand\tfor[4]{\textbf{for } #1 = #2 \textbf{ to } #3 \textbf{ do } #4 \textbf{ done }}
+\newcommand\tfordown[4]{\textbf{for } #1 = #2 \textbf{ downto } #3 \textbf{ do } #4 \textbf{ done }}
+\newcommand\tassign[2]{#1 := #2}
+\newcommand\tsend[3]{#1 \,\#\, #2 (#3)}
+
