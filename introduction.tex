@@ -134,12 +134,30 @@ l'appliquer sur des $\lambda$-termes.  La définition de ce
 prétraitement sur des $\lambda$-termes est donc la seconde
 contribution présentée par cet article.
 
-À ce stade, on peut donc mesurer la dissimilarité \am{À ce stade, on n'a pas encore parlé de la dissimilarité, seulement de l'empreinte. Peut-on rajouter un petite phrase comme "ces empreintes peuvent être comparées et offrent la possibilité de définir une mesure de dissimilarité" ? Plus généralement, il est peut être important de faire la différence entre "deux empreintes égales" et "deux empreintes similaires", les deux pouvant avoir des usages différents} entre chaque paire de termes
-d'un corpus. L'ensemble de ces mesures constitue une grande quantité
-d'information difficilement exploitable directement, en tout cas pour
-nos cas d'usage. En particulier, cette mesure n'étant pas une
-distance, elle ne fournit pas d'emblée une structure hiérarchique sur
-laquelle s'appuyer pour synthétiser des indicateurs généraux \am{En quoi une distance offre ces indicateurs ?}. Pour
+À ce stade, on peut donc mesurer la dissimilarité
+\am{
+À ce stade, on n'a pas encore parlé de la dissimilarité, seulement de
+l'empreinte. Peut-on rajouter un petite phrase comme "ces empreintes
+peuvent être comparées et offrent la possibilité de définir une mesure
+de dissimilarité" ? Plus généralement, il est peut être important de
+faire la différence entre "deux empreintes égales" et "deux empreintes
+similaires", les deux pouvant avoir des usages différents}
+\yrg{
+Regarde au début du paragraphe : ``Nous nous sommes donc moralement...''.
+Sinon, j'ai peur que faire une distinction entre empreintes égales
+et similaires sème la confusion chez le lecteur.
+}
+%
+entre chaque paire de termes d'un corpus. L'ensemble de ces mesures
+constitue une grande quantité d'information difficilement exploitable
+directement, en tout cas pour nos cas d'usage. En particulier, cette
+mesure n'étant pas une distance, elle ne fournit pas d'emblée une
+structure hiérarchique sur laquelle s'appuyer pour synthétiser des
+indicateurs généraux \am{En quoi une distance offre ces indicateurs
+?}.
+}
+%
+Pour
 pallier à ce problème, nous proposons de partitionner hiérarchiquement
 les termes en s'appuyant sur leur mesure de dissimilarité
 (section~\ref{sec:clustering}). Encore une fois, notre contribution
