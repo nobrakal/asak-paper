@@ -1,0 +1,42 @@
+\begin{figure}
+
+\[
+\begin{array}{rclr}
+\term
+  & ::= & \var & \legend{Variable} \\
+  & |   & \const & \legend{Constante} \\
+  & |   & \apply\term{\many\term} & \legend{Application} \\
+  & |   & \lam\var\term & \legend{Abstraction} \\
+  & |   & \tlet\binding\term & \legend{Définition locale} \\
+  & |   & \tletrec{\many\binding}\term & \legend{Définitions récursives} \\
+  & |   & \apply\primitive{\many\term} & \legend{Appel d'une primitive} \\
+  & |   & \switch\term{\many\branch}{\many\branch}{\term}
+        & \legend{Branchement} \\
+  & |   & \staticraise{n}{\many{\term}} & \legend{Saut local} \\
+  & |   & \staticcatch{\term}{n}{\many{\var}}{\term} & \legend{Expression étiquetée} \\
+  & |   & \trywith{\term}{n}{\term} & \legend{Expression étiquetée} \\
+  & |   & \tifthenelse\term\term\term & \legend{Branchement conditionnel} \\
+  & |   & \term ; \term & \legend{Séquencement} \\
+  & |   & \twhile\term\term & \legend{Boucle non bornée} \\
+  & |   & \tfor\var\term\term\term & \legend{Boucle bornée ascendante} \\
+  & |   & \tfordown\var\term\term\term & \legend{Boucle bornée descendante} \\
+  & |   & \tassign\var\term & \legend{Affectation} \\
+  & |   & \tsend\term\term{\many\term} & \legend{Appel de méthode} \\
+\binding & ::= & \var = \term & \legend{Définition} \\
+\branch  & ::= & n \rightarrow \term & \legend{Branche} \\
+\end{array}
+\]
+\[
+\textrm{où }
+n \in \mathbb{N},
+x \in \mathcal{V},
+c \in \mathcal{C},
+p \in \mathcal{P}.
+\]
+%% Les deux constructeurs suivants doivent être ignorés.
+%%   | Levent of lambda * lambda_event
+%%   | Lifused of Ident.t * lambda
+
+\caption{La syntaxe de {\LambdaCode}.}
+\label{fig:lambda-syntax}
+\end{figure}
