@@ -112,21 +112,7 @@ gomme effectivement de cette façon certaines différences sans intérêt
 entre deux termes {\OCaml}. Seulement, pour pouvoir comparer
 rapidement des milliers de $\lambda-$termes deux-à-deux, on doit se
 donner une représentation compacte des $\lambda$-termes. Nous
-introduisons donc un prétraitement
-%
-\am{
-Je crois qu'il y a deux choses différentes ici: le pré-traitement
-(alpha-renommage, inlining de ce qui est possible) et le traitement
-(le calcul d'empreinte à proprement parler); ou ai-je mal compris ?
-}
-\yrg{
-Ce que tu appelles ``prétraitement'', je l'appelle ``normalisation
-de la représentation des lambda termes'' et c'est raconté par la
-phrase ``En utilisant ...'' un peu plus haut. Pour moi, le calcul d'empreinte
-est un prétraitement pour préparer le calcul de similarité.
-Est-ce que cette vision a du sens?
-}
-des $\lambda$-termes pour calculer leurs \textit{empreintes}
+introduisons donc un prétraitement des $\lambda$-termes pour calculer leurs \textit{empreintes}
 respectives : l'empreinte d'un $\lambda$-terme est un ensemble
 d'entiers qui caractérisent ses aspects syntaxiques importants. C'est
 une idée déjà présente dans la littérature mais nous la raffinons pour
@@ -134,29 +120,10 @@ l'appliquer sur des $\lambda$-termes.  La définition de ce
 prétraitement sur des $\lambda$-termes est donc la seconde
 contribution présentée par cet article.
 
-À ce stade, on peut donc mesurer la dissimilarité
-\am{
-À ce stade, on n'a pas encore parlé de la dissimilarité, seulement de
-l'empreinte. Peut-on rajouter un petite phrase comme "ces empreintes
-peuvent être comparées et offrent la possibilité de définir une mesure
-de dissimilarité" ? Plus généralement, il est peut être important de
-faire la différence entre "deux empreintes égales" et "deux empreintes
-similaires", les deux pouvant avoir des usages différents}
-\yrg{
-Regarde au début du paragraphe : ``Nous nous sommes donc moralement...''.
-Sinon, j'ai peur que faire une distinction entre empreintes égales
-et similaires sème la confusion chez le lecteur.
-}
-%
-entre chaque paire de termes d'un corpus. L'ensemble de ces mesures
+À ce stade, on peut donc mesurer la dissimilarité entre chaque paire de termes d'un corpus. L'ensemble de ces mesures
 constitue une grande quantité d'information peu structurée
 difficilement exploitable directement, en tout cas pour nos cas
-d'usage. \am{En quoi une distance offre ces indicateurs ?}. \yrg{Tu as
-raison, c'est difficile à comprendre et je ne suis même pas tout à
-fait sûr que c'est vrai. J'ai supprimé ce passage.}
-%
-Pour
-pallier à ce problème, nous proposons de partitionner hiérarchiquement
+d'usage. Pour pallier à ce problème, nous proposons de partitionner hiérarchiquement
 les termes en s'appuyant sur leur mesure de dissimilarité
 (section~\ref{sec:clustering}). Encore une fois, notre contribution
 consiste à raffiner un algorithme déjà présent dans la littérature, la
