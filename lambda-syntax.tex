@@ -12,8 +12,8 @@
   & |   & \apply\primitive{\many\term} & \legend{Appel d'une primitive} \\
   & |   & \switch\term{\many\branch}{\many\branch}{\term}
         & \legend{Branchement} \\
-  & |   & \staticraise{n}{\many{\term}} & \legend{Saut local} \\
-  & |   & \staticcatch{\term}{n}{\many{\var}}{\term} & \legend{Expression étiquetée} \\
+  & |   & \staticraise\nat{\many{\term}} & \legend{Saut local} \\
+  & |   & \staticcatch{\term}\nat{\many{\var}}{\term} & \legend{Expression étiquetée} \\
   & |   & \trywith{\term}{n}{\term} & \legend{Expression étiquetée} \\
   & |   & \tifthenelse\term\term\term & \legend{Branchement conditionnel} \\
   & |   & \term ; \term & \legend{Séquencement} \\
@@ -28,10 +28,10 @@
 \]
 \[
 \textrm{où }
-n \in \mathbb{N},
-x \in \mathcal{V},
-c \in \mathcal{C},
-p \in \mathcal{P}.
+\nat \in \mathbb{N},
+\var \in \mathcal{V},
+\const \in \mathcal{C},
+\primitive \in \mathcal{P}.
 \]
 %% Les deux constructeurs suivants doivent être ignorés.
 %%   | Levent of lambda * lambda_event
