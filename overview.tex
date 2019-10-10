@@ -127,12 +127,66 @@ inessentiels ; (ii) on calcule une empreinte pour caractérisés la
 structure et les ingrédients principaux des programmes normalisés ;
 (iii) on applique un algorithme de partitionnement hiérarchique qui
 s'appuie sur les empreintes.
-\yrg{Rajouter un figure?}
+\yrg{Rajouter une figure?}
 
 \paragraph{Comment les définitions sont-elles normalisées?}
-On aurait pu choisir de traduire les termes sources vers un langage conçu
-pour l'occasion mais ce serait beaucoup de travail.
+L'analyse syntaxique est la solution canonique pour éliminer les
+artefacts textuels et ne garder que la structure d'un code source.
+Notre outil travaille donc sur des arbres de syntaxe abstraits.  On
+pourrait opposer à ce choix de conception le fait que considérer le
+texte des programmes permettrait de séparer des programmes dont les
+arbres de syntaxe sont égaux. Cependant, un tel point de vue sépare
+trop de programmes.
+
+Une fois que l'on a décidé de travailler sur un langage d'arbres
+distincts de la syntaxe concrète, il faut choisir ce nouveau langage.
+On aurait pu choisir de traduire les termes sources vers un langage
+conçu pour l'occasion mais ce serait beaucoup de travail. Il existe
+heureusement le langage intermédiaire {\LambdaCode} dans le
+compilateur et nos expérimentations nous portent à croire qu'il se
+place au bon niveau d'abstraction pour capturer la structure
+calculatoire du programme source.
+
+Ce langage sera présenté précisément dans la section~\ref{sec:lambda}
+mais nous pouvons d'ores et déjà donner la traduction du corpus jouet
+dans la figure~\ref{fig:lambda-corpus}. Pour réaliser cette
+traduction, nous réutilisons la partie avant du compilateur~{\OCaml}
+et nous effectuons un post-traitement qui normalise encore un peu plus
+les termes. Les détails de cette traduction seront décrits dans la
+section~\ref{sec:lambda-normalization}. Sur nos exemples, on peut déjà
+remarquer que les définitions~$1$ et~$2$ sont identiques une fois
+normalisées. Que la définition~$3$ normalisée partage des sous-termes
+avec les définitions~$1$ et $2$ normalisées. Des remarques similaires
+s'appliquent aux autres définitions.
+
+\begin{figure}
+
+TODO
+
+\caption{Traduction du corpus dans le code {\LambdaCode} du compilateur~\OCaml.}
+\label{fig:lambda-corpus}
+\end{figure}
 
 \paragraph{Comment les empreintes sont-elles calculées?}
+
+Comparer deux arbres en itérant sur leurs structures respectives a un
+coût proportionnel à leur taille. Par ailleurs, la notion de
+comparaison qui nous intéresse doit idéalement savoir comparer
+l'ensemble des sous-arbres des deux arbres pour déterminer à quel
+point ils sont construits avec des ingrédients similaires, i.e.  à
+quel point ils ont du code en commun. L'ordre d'apparition des
+sous-arbres n'est donc pas forcément important : bien entendu, deux
+arbres utilisant les mêmes sous-arbres dans le même ordre seront
+très similaires mais utiliser les mêmes sous-arbres dans un ordre
+différent est aussi une forme de similarité non négligeable même
+si elle est un peu moins forte.
+
+Après ces remarques, l'implémentation d'une fonction d'évaluation de
+la similarité entre deux termes $\LambdaCode$ semble difficile. Nous introduisons
+les empreintes d'arbres pour simplifier cette implémentation et aussi
+pour la rendre efficace. Les empreintes sont des listes d'entiers qui
+correspondent aux clés de hachages des sous-termes (suffisamment gros)
+du terme $\LambdaCode$.
+
 
 \paragraph{Comment le partitionnement hiérarchique est-il effectué?}
