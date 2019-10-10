@@ -1,6 +1,16 @@
 \newcommand\yrg[1]{\textcolor{red}{YRG: #1}}
 \newcommand\am[1]{\textcolor{blue}{AM: #1}}
 
+% Code
+\newminted[myocaml]{ocaml}{linenos=true, texcl=true}
+
+\newenvironment{ocaml}
+{\small\VerbatimEnvironment
+\begin{myocaml}}
+{\end{myocaml}}
+
+\newcommand\iocaml[1]{\mintinline{ocaml}{#1}}
+
 % Layout
 \newcommand\many[1]{\overline{#1}}
 \newcommand\tuple[2]{\many{#2}^{#1}}
