@@ -3,13 +3,18 @@
 
 % Code
 \newminted[myocaml]{ocaml}{linenos=true, texcl=true}
-
 \newenvironment{ocaml}
 {\small\VerbatimEnvironment
 \begin{myocaml}}
 {\end{myocaml}}
 
 \newcommand\iocaml[1]{\mintinline{ocaml}{#1}}
+
+\newminted[mylisp]{lisp}{linenos=true, texcl=true}
+\newenvironment{lisp}
+{\small\VerbatimEnvironment
+\begin{mylisp}}
+{\end{mylisp}}
 
 % Layout
 \newcommand\many[1]{\overline{#1}}

@@ -2,6 +2,9 @@ Dans cette section, nous décrivons l'architecture de notre outil sur
 un corpus d'exemple. Nous justifions nos choix de conception par la
 même occasion.
 
+\yrg{Il faut dire à un moyen que l'on compare les définitions deux à deux
+et non pas tous les sous-termes deux à deux.}
+
 \paragraph{Que produit {\Asak}?}
 La figure~\ref{fig:example:sources} contient les cinq
 exemples de définitions {\OCaml} qui forment un corpus jouet
@@ -160,14 +163,65 @@ des sous-termes avec les définitions~$1$ et $2$ normalisées. Des
 remarques similaires s'appliquent aux autres définitions.
 
 \begin{figure}
+\begin{lisp}
+Définition 1:
+(function l/88
+  (if l/88
+    (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
+      (makeblock 0 (field 0 l/88) 0a))
+    0a))
 
-TODO
+Définition 2:
+(function l/88
+  (if l/88
+    (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
+      (makeblock 0 (field 0 l/88) 0a))
+    0a))
 
+Définition 3:
+(function l/88
+  (catch
+    (if l/88
+      (if (field 1 l/88)
+        (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
+          (makeblock 0 (field 0 l/88) 0a))
+        (exit 12))
+      (exit 12))
+   with (12) l/88))
+
+Définition 4:
+(function l/88
+  (letrec
+    (rev_aux/89
+       (function acc/90 l/91
+         (if l/91
+           (apply rev_aux/89 (makeblock 0 (field 0 l/91) acc/90)
+             (field 1 l/91))
+           acc/90)))
+    (apply rev_aux/89 0a l/88)))
+
+Définition 5:
+(function l/88
+  (if l/88
+    (letrec
+      (rev2/91
+         (function x/92 y/93
+           (if y/93
+             (apply rev2/91 (makeblock 0 (field 0 y/93) x/92) (field 1 y/93))
+             x/92)))
+      (apply rev2/91 0a l/88))
+    0a))
+
+Définition 6:
+(function l/88
+  (apply (field 20 (global Stdlib__list!))
+    (function acc/146 x/147 (makeblock 0 x/147 acc/146)) 0a l/88))
+\end{lisp}
 \caption{Traduction du corpus dans le code {\LambdaCode} du compilateur~\OCaml.}
 \label{fig:lambda-corpus}
 \end{figure}
 
-\paragraph{Comment les empreintes sont-elles calculées?}
+\paragraph{Pourquoi calcule-t-on des empreintes?}
 
 Comparer deux arbres en itérant sur leurs structures respectives a un
 coût proportionnel à leur taille. Par ailleurs, la notion de
@@ -182,11 +236,40 @@ différent est aussi une forme de similarité non négligeable même
 si elle est un peu moins forte.
 
 Après ces remarques, l'implémentation d'une fonction d'évaluation de
-la similarité entre deux termes $\LambdaCode$ semble difficile. Nous introduisons
-les empreintes d'arbres pour simplifier cette implémentation et aussi
-pour la rendre efficace. Les empreintes sont des listes d'entiers qui
-correspondent à des clés de hachages des sous-termes (suffisamment gros)
-du terme $\LambdaCode$.
+la similarité entre deux termes $\LambdaCode$ semble difficile. Nous
+introduisons les empreintes d'arbres pour simplifier cette
+implémentation et aussi pour la rendre efficace. Les empreintes sont
+des ensembles de clés de hachages des sous-termes (suffisamment gros)
+du terme $\LambdaCode$. L'idée importante de cette notion d'empreinte
+est de prendre en compte l'ordre relatif des sous-termes dans le
+calcul de la clé de hachage mais de voir l'empreinte comme un ensemble
+de clés pour maintenir une certaine proximité entre les termes qui
+utilisent les mêmes sous-termes, mais dans un ordre différent. Ainsi,
+les deux programmes suivants:
+\begin{ocaml}
+let f () = e1; e2
+let g () = e2; e1
+\end{ocaml}
+\noindent ont pour empreintes:
+\[
+\begin{array}{rcl}
+E(\iocaml{f}) &=& \{ H(\iocaml{e1; e2}), H(\iocaml{e1}), H(\iocaml{e2}) \} \\
+E(\iocaml{g}) &=& \{ H(\iocaml{e2; e1}), H(\iocaml{e1}), H(\iocaml{e2}) \}
+\end{array}
+\]
+\noindent où $E(t)$ est l'empreinte de $t$ et $H(t)$ est la clé de hachage de $t$.
 
+Ces deux empreintes sont distinctes mais partagent deux clés de
+hachage. Ce partage témoigne du fait qu'elles ``utilisent les mêmes
+ingrédients''. Les empreintes calculées pour les définitions de notre
+corpus jouet se trouvent dans la figure~\ref{fig:hash} Nous décrivons
+la définition précise de cette prise d'empreintes dans la
+section~\ref{sec:hash}.
+
+\begin{figure}
+TODO
+\caption{Les empreintes des définitions de notre corpus jouet.}
+\label{fig:hash}
+\end{figure}
 
 \paragraph{Comment le partitionnement hiérarchique est-il effectué?}
