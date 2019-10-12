@@ -1,3 +1,28 @@
 %!TEX root = root.tex
 
-\subsection{Amélioration de la fonction de hash}
+\subsection{Motivation}
+Une centaine d'étudiants de troisième année suivent le cours de programmation fonctionnelle. Ils ont 2 heures de travaux pratiques par semaine. Comment le professeur peut-il (humainement) analyser les réponses aux exercices de la semaine ?
+
+L'utilisation de {\LearnOCaml} est déjà d'une grande aide: la correction automatique des exercices permet de voir les pourcentages de réussite de chaque étudiant. Cela pose cependant un problème: environ 80\% des étudiants ont eu tous les points ! Il s'agit maintenant de comprendre \emph{comment} les étudiants ont répondu; c'est-à-dire de comparer leur code.
+
+Nous avons donc intégré {\Asak} à {\LearnOCaml} afin de classifier les codes des étudiants. En observant les représentants des classes obtenues et leur taille, le professeur peut ainsi se faire une idée en très peu de temps de la façon dont les élève ont répondu, ainsi qu'identifier les élèves qui ont fournis une réponse tout à fait distincte des autres et nécessitent peut-être plus d'attention.
+
+\subsection{Approche utilisée}
+Partant de l'hypothèse que les tests automatiques ont été bien écrits, nous classifions une première fois les codes selon la note qu'ils ont obtenu. En effet, nous ne voulons jamais identifier deux codes qui n'ont pas eu la même note, même s'ils sont similaire syntaxiquement. Cette première passe nous permet aussi d'avoir pour chaque classe une hypothèse, très forte, d'équivalence sémantique.
+Cette hypothèse nous permet de raffiner la fonction de calcul d'empreinte afin d'identifier encore plus de codes.
+
+\subsubsection{Amélioration de la fonction de calcul d'empreinte}
+La fonction de calcul d'empreinte capture la forme de l'arbre et quelques plusieurs autres informations qui peuvent ici être réinterprétées.
+
+\paragraph{La combinaison des empreintes}
+Pour calculer l'empreinte d'un nœud, nous calculons en fait l'empreinte de la liste des empreintes de ses fils (avec l'ajout d'un sel propre au nœud en question). L'ordre des empreintes dans cette liste importe la plupart du temps. Mais ici, notre hypothèse  d'équivalence sémantique permet d'assurer que l'ordre n'importe pas. En effet, si c'était le cas, les codes auraient une sémantique différente. Nous trions donc toutes les listes d'empreintes selon un ordre arbitraire avant de les combiner.
+
+\paragraph{L'empreinte des feuilles}
+Nous avons déjà soulevé le problème du calcul des empreintes des feuilles de l'arbre en Section \am{TODO Insérer une référence à la section correspondante}. Dans ce contexte d'équivalence sémantique, nous pouvons supposer que dans deux arbres de même forme, les identifiants ne sont que des alias les uns des autres. En effet, s'il existait une différence sémantique entre deux identifiants, les deux codes n'auraient pas la même sémantique.
+Nous avons donc choisi d'associer la même empreinte à tous les identifiants.
+
+\subsection{Résultats}
+
+Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus gros: celui des réponses des étudiants de troisième année à la question "implémentez la fonction \verb|rev|".
+
+\am{Quoi mettre ? Une capture d'écran ? Une description des classes obtenues ?}
