@@ -113,16 +113,23 @@ d'analyse supplémentaire. Le regroupement des définitions~$4$ et~$5$
 est assez naturel puisqu'elles suivent la même (et bonne!) stratégie
 qui consiste à accumuler le résultat dans l'argument d'une fonction
 auxiliaire interne. Notons que ces deux définitions ne sont pas
-syntaxiquement équivalence même si elles utilisent les mêmes ``ingrédients'' :
+syntaxiquement équivalentes même si elles utilisent les mêmes ``ingrédients'' :
 la définition~$5$ effectue une analyse par cas supplémentaire pour
 traiter le cas de la liste vide de façon spécifique. Les deux classes~$(1-2)-3$
 et~$4-5$ partagent le fait d'être des définitions récursives procédant par
 analyse de cas : ces individus sont clairement séparés de la définition~$6$
 qui s'appuie sur une spécialisation de la fonction~\iocaml{List.fold_left}.
 
+L'intérêt d'une classification hiérarchique est surtout visible sur de
+grands corpus : les quelques classes les plus proches de la racine du
+dendrogramme sont les principales classes de définitions similaires
+-- celles qui partagent au moins un sous-terme -- et c'est
+en observant chaque classe en profondeur que l'on raffine petit à
+petit les différences entre ses membres.
+
 \paragraph{Comment procède {\Asak}?}
-Ce partitionnement semble somme toute assez naturel mais comment notre
-outil l'a-t-il obtenu? Comme nous l'avons déjà écrit dans
+Ce partitionnement semble donc somme toute assez naturel mais comment
+notre outil l'a-t-il obtenu? Comme nous l'avons déjà écrit dans
 l'introduction, le traitement de notre outil se décompose
 essentiellement en trois étapes: (i) les programmes sources sont
 normalisés pour ignorer les détails syntaxiques que nous jugeons
@@ -273,3 +280,32 @@ TODO
 \end{figure}
 
 \paragraph{Comment le partitionnement hiérarchique est-il effectué?}
+
+Il existe deux grandes familles de partitionnement hiérarchique : les
+partitionnements ascendants et les partitionnements descendants. Les
+partitionnements ascendants sont adaptés aux corpus formés de petits
+groupes tandis que les partitionnements descendants à ceux formés de
+grands groupes. Nous avons fait l'hypothèse que les groupes de
+définitions similaires sont petits par rapport au corpus et nous avons
+donc choisi un algorithme de partitionnement hiérarchique ascendant.
+
+L'algorithme procède donc en partant d'un partitionnement où chaque
+individu est dans une classe distincte de celles des autres et choisi
+à chaque itération de fusionner les deux classes les moins
+dissimilaires. Nous définirons précisément la mesure de dissimilarité
+que nous utilisons dans la section~\ref{sec:clustering} mais pour
+se donner une idée du fonctionnement de l'algorithme, le lecteur
+pourra en observer la trace d'exécution sur notre corpus jouet
+dans la figure~\ref{fig:clustering-jouet}.
+
+\begin{figure}
+
+Donner la (demi-)matrice de dissimilarité.
+
+Donner les étapes du partitionnements (avec les valeurs de dissimilarité entre classes).
+
+\caption{Trace du partitionnement des définitions du corpus jouet s'appuyant sur la dissimilarité
+des définitions entre elles.}
+\label{fig:clustering-jouet}
+\end{figure}
+
