@@ -21,6 +21,12 @@ Pour calculer l'empreinte d'un nœud, nous calculons en fait l'empreinte de la l
 Nous avons déjà soulevé le problème du calcul des empreintes des feuilles de l'arbre en Section \am{TODO Insérer une référence à la section correspondante}. Dans ce contexte d'équivalence sémantique, nous pouvons supposer que dans deux arbres de même forme, les identifiants ne sont que des alias les uns des autres. En effet, s'il existait une différence sémantique entre deux identifiants, les deux codes n'auraient pas la même sémantique.
 Nous avons donc choisi d'associer la même empreinte à tous les identifiants.
 
+\subsubsection{Quelles empreintes conserver ?}
+
+Nous avons vu que la fonction de clustering utilise la liste des empreintes des sous-arbres pour identifier les codes "proches". Mais quelles empreintes doit-on conserver ? Comme nous travaillons en abstrayant les constantes (c'est-à-dire que toutes les constantes ont la même empreinte), presque tous les arbres partagent des empreintes. Nous ne pouvons donc pas conserver les empreintes de tous les sous-arbres.
+
+Une approche est de ne conserver que les empreintes des "gros" sous-arbres, afin d'éviter la pollution induite par les empreintes des feuilles. Nous proposons donc de ne retenir que les empreintes des sous-arbres ayant au moins un certain pourcentage de nœuds comparé à au nombre de nœuds de l'arbre tout entier.
+
 \subsection{Résultats}
 
 Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus gros: celui des réponses des étudiants de troisième année à la question "implémentez la fonction \verb|rev|".
