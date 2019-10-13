@@ -1,12 +1,79 @@
 %!TEX root = root.tex
 
-\subsection{Lambda}
+Dans cette section, nous formalisons la prise d'empreintes des
+définitions. Dans la section~\ref{sec:lambda}, nous donnons la syntaxe
+du langage~$\LambdaCode$ ainsi que les deux normalisations que nous
+appliquons à ses termes. Dans la section~\ref{sec:fingerprint},
+nous donnons la définition précise de notre fonction de prise
+d'empreintes.
+
+\subsection{$\LambdaCode$ normalisé}
 \label{sec:lambda}
+
+\subsubsection{Présentation de $\LambdaCode$}
 
 \input{lambda-syntax}
 
-\subsection{Transformation de lambda}
-\label{sec:lambda-normalization}
+La syntaxe du langage $\LambdaCode$ est donnée dans la
+figure~\ref{fig:lambda-syntax}. Il s'agit d'un $\lambda$-calcul avec
+quelques spécificités par rapport à celui que l'on trouve dans les
+présentations à saveur plus théoriques. Tout d'abord, les fonctions ne
+sont pas unaires : elles ont une arité potentiellement supérieure
+à~$1$. Ensuite, on distingue les primitives des constantes : les
+primitives sont nécessairement appliquées. Le langage contient un
+fragment impératif permettant d'affecter des variables, d'itérer
+\textit{via} des boucles \iocaml{for} et \iocaml{while}, et enfin de
+détourner le flot du contrôle \textit{via} les différents mécanismes
+de lancement et rattrapage d'exceptions. L'appel de méthode est la
+construction qui nous rappelle qu'{\OCaml} est un aussi un langage à
+objets. Pour finir, $\LambdaCode$ n'a pas d'analyse de motifs mais est
+muni d'un branchement n-aire introduit par le mot-clé~\iocaml{switch}.
+
+Par manque de place, nous ne donnons pas les règles de sémantique de
+ce langage et nous laissons au lecteur le soin de réfléchir à ces
+dernières. Par contre, pour se convaincre que l'on ne perd pas trop de
+structure en calculant la redondance sur des termes de {\LambdaCode}
+et non des termes {\OCaml}, il faut prendre le temps d'expliquer les
+différences entre ces deux langages.
+
+\paragraph{Absence de types}
+{\LambdaCode} est un langage non typé. On n'y retrouve donc aucune
+déclaration de types. Cette absence limite donc d'emblée le champ
+d'application de {\Asak}: nous ne pouvons pas détecter de déclarations
+de type redondantes. Cependant, cette limitation a un avantage :
+lorsque l'on oublie les types, on se donne la possibilité de détecter
+plus de redondances entre des programmes de types distincts mais
+partageant la même structure. En revenant aux définitions des types
+qui interviennent dans deux programmes ayant la même structure, on
+peut espérer détecter indirectement des redondances entre les
+définitions de types.
+%
+Un exemple d'une telle situation sera présentée
+et discutée dans la section~\ref{sec:} \yrg{Donner l'endroit où on
+discute de la fonction ``isomorphe'' à Option.map}.
+
+\paragraph{Absence de modules et de classes}
+Les constructions de seconde classe (comme les définitions de modules
+et de classes d'objets) ont disparu dans le programme traduit
+{\LambdaCode}. Cela limite notre capacité à détecter des modules
+similaires ou des classes similaires. Comme pour les définitions de
+type, nous pensons qu'en nous focalisant uniquement sur les aspects
+calculatoires, nous pouvons détecter \textit{a posteriori} des
+définitions de modules ou de classes similaires parce qu'elles
+partagent des définitions similaires.
+
+\paragraph{Absence d'analyse de motifs}
+L'analyse de motifs d'{\OCaml} a été compilée en {\LambdaCode} sous la
+forme d'arbres de décision, exprimés à l'aide d'expressions
+conditionnelles et de branchements. Deux analyses de motifs distinctes
+syntaxiquement en {\OCaml} peuvent être envoyées vers le même arbre de
+décision et le même code~\LambdaCode: c'est par exemple le cas de deux
+analyses à~$3$ branches sur le type \iocaml{color = Red | Black |
+  White} car quelque soit l'ordre des branches de
+l'analyse\footnote{En supposant qu'il n'y a pas de clause
+  \iocaml{when} en jeu.}, celles-ci vont être traduites vers des
+branchements à $3$ cas où l'ordre des cas correspond à l'ordre des
+constructeurs de données dans la définition du type.
 
 \subsubsection{$\alpha$-renommage}
 
@@ -25,7 +92,10 @@ remplacée par leur définition).
 
 Nous inlinons donc toutes les définitions possibles.
 
-\subsection{Notation}
+\subsection{Formalisation}
+\label{sec:fingerprint}
+
+\paragraph{Notation}
 On notera:
 
 \begin{itemize}

@@ -15,7 +15,7 @@ aura reconnnu des réponses typiques d'étudiants apprenti-programmeurs
 fonctionnels.
 
 \begin{figure}
-
+\begin{multicols}{2}
 \begin{ocaml}
 (* Code 1 *)
 let rec rev l = match l with
@@ -32,7 +32,8 @@ let rec rev l =
 let rec rev l = match l with
     [] | [_] -> l
   | t::q -> rev q@[t];;
-
+\end{ocaml}
+\begin{ocaml}
 (* Code 4 *)
 let rev l=
   let rec rev_aux acc l=
@@ -53,7 +54,7 @@ let rev l =
 let rev l =
   List.fold_left (fun acc x -> x :: acc) [] l
 \end{ocaml}
-
+\end{multicols}
 \label{fig:example:sources}
 \caption{Un corpus jouet pour illustrer notre algorithme.}
 \end{figure}
@@ -171,22 +172,19 @@ remarques similaires s'appliquent aux autres définitions.
 
 \begin{figure}
 \begin{lisp}
-Définition 1:
-(function l/88
+Définition 1: (function l/88
   (if l/88
     (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
       (makeblock 0 (field 0 l/88) 0a))
     0a))
 
-Définition 2:
-(function l/88
+Définition 2: (function l/88
   (if l/88
     (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
       (makeblock 0 (field 0 l/88) 0a))
     0a))
 
-Définition 3:
-(function l/88
+Définition 3: (function l/88
   (catch
     (if l/88
       (if (field 1 l/88)
@@ -196,8 +194,7 @@ Définition 3:
       (exit 12))
    with (12) l/88))
 
-Définition 4:
-(function l/88
+Définition 4: (function l/88
   (letrec
     (rev_aux/89
        (function acc/90 l/91
@@ -207,8 +204,7 @@ Définition 4:
            acc/90)))
     (apply rev_aux/89 0a l/88)))
 
-Définition 5:
-(function l/88
+Définition 5: (function l/88
   (if l/88
     (letrec
       (rev2/91
@@ -219,8 +215,7 @@ Définition 5:
       (apply rev2/91 0a l/88))
     0a))
 
-Définition 6:
-(function l/88
+Définition 6: (function l/88
   (apply (field 20 (global Stdlib__list!))
     (function acc/146 x/147 (makeblock 0 x/147 acc/146)) 0a l/88))
 \end{lisp}
