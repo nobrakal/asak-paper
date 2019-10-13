@@ -22,3 +22,12 @@ Nous avons réussi à compiler 1250 paquets sur les 2428 paquets que compte à c
 
 Sur ces 1250 paquets, nous avons extraits 356 703 définitions toplevel strictement différentes (c'est-à-dire sans compter les définitions d'un même paquet de deux versions différentes qui produisent la même empreinte).
 
+En ne conservant que les empreintes des arbres de plus 30 nœuds (limite calculatoire de notre implémentation), ces définitions ont été classées en 168 307 classes, dont 36 640 avec strictement plus d'un élément (c'est-à-dire que nous avons identifié au moins 36 640 doublons).
+
+\subsubsection{Analyse des classes les plus grandes}
+\begin{enumerate}
+\item Avec 21 429 éléments, la classe des constantes domine toutes les autres. En effet, il est très courant de définir une constante via une définition toplevel, et comme notre outil abstrait les constantes, elles ont toute la même empreinte.
+\item Avec 18 177 éléments vient la classe des synonymes.
+\item Avec 13 437 éléments vient celles de Coq.
+\item Avec 6 210 éléments vient celles des références à des constantes.
+\end{enumerate}
