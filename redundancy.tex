@@ -1,3 +1,24 @@
 %!TEX root = root.tex
 
 La redondance de code est un des fléaux de l'informatique moderne. Elle entraine inévitablement une grande difficulté de maintien (si l'on change une définition, il faudrait changer tous ses clones), de compréhension (nous ne dénombrons pas moins de 30 noms différents pour la célèbre fonction \verb|Option.map| dans la moitié des paquets \Opam) et des pertes de temps énorme consacrés à redéfinir des fonctions usuelles (nous dénombrons 142 implémentations de \verb|Option.map| dans la moitié des paquets \Opam).
+
+Comme le lecteur avisé l'a compris, nous avons lancé {\Asak} sur l'ensemble des paquets {\Opam}.
+
+\subsection{Approche utilisée}
+
+Un premier obstacle est la construction de l'entièreté des paquets {\Opam} afin d'obtenir les expressions lambda des tous leurs fichiers sources.
+
+Nous avons choisi de travailler à l'aide d'un compilateur modifié qui normalise et exporte les arbres lambdas tout ce qu'il compile vers un fichier. Il nous a ensuite suffit d'essayer d'installer chaque paquet {\Opam} à l'aide de ce compilateur.
+
+\subsection{Analyse des résultats}
+
+Nous avons réussi à compiler 1250 paquets sur les 2428 paquets que compte à ce jour le dépôt {\Opam}. Tous les paquets n'ont pas pu être installé car certains:
+
+\begin{itemize}
+\item Ne compilent pas avec {\OCaml} 4.08.01
+\item Entrent en conflit avec {\OCaml} 4.08.01
+\item Dépendent de librairies C non-installées
+\end{itemize}
+
+Sur ces 1250 paquets, nous avons extraits 356 703 définitions toplevel strictement différentes (c'est-à-dire sans compter les définitions d'un même paquet de deux versions différentes qui produisent la même empreinte).
+
