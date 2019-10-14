@@ -16,6 +16,22 @@
 \begin{mylisp}}
 {\end{mylisp}}
 
+% Theorems
+\newtheoremstyle{mydefinition}% <name>
+{3pt}% <Space above>
+{3pt}% <Space below>
+{\upshape}% <Body font>
+{}% <Indent amount>
+{\bfseries\upshape}% <Theorem head font>
+{\\}% <Punctuation after theorem head>
+{.5em}% <Space after theorem headi>
+{}% <Theorem head spec (can be left empty, meaning `normal')>
+
+\theoremstyle{mydefinition}
+\newtheorem{defn}{Definition}
+\newtheorem{thm}{Theorem}
+\newtheorem{exn}{Example}
+
 % Layout
 \newcommand\many[1]{\overline{#1}}
 \newcommand\tuple[2]{\many{#2}^{#1}}
@@ -23,6 +39,7 @@
 
 % Names
 \newcommand\OCaml{\textsc{OCaml}}
+\newcommand\Coq{\textsc{Coq}}
 \newcommand\LambdaCode{\textsc{Lambda}}
 \newcommand\Asak{\textsc{Asak}}
 \newcommand\Opam{\textsc{OPAM}}

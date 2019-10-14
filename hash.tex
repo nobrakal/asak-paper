@@ -67,7 +67,7 @@ L'analyse de motifs d'{\OCaml} a été compilée en {\LambdaCode} sous la
 forme d'arbres de décision, exprimés à l'aide d'expressions
 conditionnelles et de branchements. Deux analyses de motifs distinctes
 syntaxiquement en {\OCaml} peuvent être envoyées vers le même arbre de
-décision et le même code~\LambdaCode: c'est par exemple le cas de deux
+décision et donc le même code~\LambdaCode: c'est par exemple le cas de deux
 analyses à~$3$ branches sur le type \iocaml{color = Red | Black |
   White} car quelque soit l'ordre des branches de
 l'analyse\footnote{En supposant qu'il n'y a pas de clause
@@ -77,45 +77,88 @@ constructeurs de données dans la définition du type.
 
 \subsubsection{$\alpha$-renommage}
 
-Le nom des variables sera pris en compte lors du hash de la
-structure. Il est donc important de s'assurer que les noms de
-variables liées (par exemple lors d'une définition de fonction) ne
-jouent aucun rôle.  C'est pourquoi nous faisons une itération sur
-chaque arbre Lambda afin de renommer les variables liées selon leur
-position.
+Le nom des variables est pris en compte lors de la prise d'empreintes.
+Naturellement, nous avons choisi de nous abstraire de ces noms en
+détectant la redondance $\alpha$-équivalence près. Il est donc
+important de s'assurer que les noms de variables liées (par exemple
+lors d'une définition de fonction) ne jouent aucun rôle. Pour cette
+raison, nous renommons tous les identificateurs des variables liées en
+des identificateurs canoniques qui codent leurs indices de De Bruijn.
 
-\subsubsection{Inlining agressif}
+\subsubsection{Réduction des définitions locales inoffensives}
 
-L'arbre Lambda vient avec des informations sur les définitions
-\verb|let| et notamment si elles peuvent être inliné (c'est-à-dire
-remplacée par leur définition).
+En {\OCaml}, et contrairement à {\Coq}, on ne peut pas facilement
+comparer les termes modulo l'évaluation : en effet, l'évaluation d'un
+terme peut diverger ou produire des effets de bord incontrôlés.
+%
+Par contre, le compilateur sait détecter des définitions locales
+très simples dont l'expansion ne pose pas de problème. Ces définitions
+sont marquées par une annotation :
 
-Nous inlinons donc toutes les définitions possibles.
+\begin{ocaml}
+type let_kind = Strict | Alias | StrictOpt | Variable
+\end{ocaml}
 
-\subsection{Formalisation}
+\noindent \iocaml{Strict} signifie que la définition peut faire
+des effets de bord et ne doit pas être réduite (sauf s'il s'agit
+d'une variable ou d'une constante) ; \iocaml{Alias} signifie que
+la définition est pure et peut donc être réduite ; \iocaml{StrictOpt}
+signifie que la définition dépend de la mémoire et ne peut donc pas
+être réduite ; \iocaml{Variable} signifie que la définition sera
+masquée dans la suite. \yrg{Le cas Variable me semble un peu étrange
+et je ne suis pas sûr de comprendre à quoi il sert...}
+
+\yrg{Appliquer ces expansions peut changer la complexité des programmes.
+Est-il raisonnable de toutes les appliquer? Pourquoi l'expansion est
+une bonne idée?}
+
+\yrg{Section à terminer}
+
+\subsection{Définition de la prise d'empreintes}
 \label{sec:fingerprint}
 
-\paragraph{Notation}
-On notera:
+Nous présentons maintenant précisément la notion d'empreinte que nous
+avons choisie et la fonction qui la calcule pour tout
+terme~$\LambdaCode$ (normalisé par les réécritures décrites dans les
+deux sections précédentes). Comme nous l'expliquerons dans la
+section~\ref{sec:related-work}, notre méthode est une variante d'un
+calcul d'empreinte de la littérature~\cite{chilowicz:hal-00627811}.
 
-\begin{itemize}
-	\item $H = \mathbb{N} \times 2^{128}$. Cela permet de représenter les couples poids/hash.
-	\item $List_n(X)$ les listes de taille $n \in \mathbb{N}$ d'éléments de $X$
-	\item $List_*(X) = \cup_{n\in\mathbb{N}}\ List_n(X)$
-\end{itemize}
+L'empreinte d'un arbre de syntaxe doit témoigner de la structure de
+cet arbre ainsi que l'ensemble des sous-arbres qui la constitue. Pour
+des raisons d'efficacité, nous réduisons chaque sous-arbre à un entier
+correspondant à son image par une fonction de hachage. Par ailleurs,
+plus un sous-arbre a un grand nombre de n{\oe}uds et plus sa
+contribution à l'arbre global est important : nous pondérons donc
+la clé de hachage par ce nombre de n{\oe}uds.
 
-\subsection{La fonction de hash}
+\begin{defn}
+On appelle $f$-\textit{glyphe d'un arbre de syntaxe}~$t$, le couple
+formé $H_f(t)$ d'un entier 63 bits correspondant à son nombre de n{\oe}uds et
+d'un entier 128-bits correspondant à l'image de cet arbre à travers
+une fonction de hachage~$f$ donnée.
+\end{defn}
 
-Nous suivons ici la méthodologie donnée par Chilowicz et
-al. \cite{chilowicz:hal-00627811}: nous allons définir récursivement
-une fonction de hash pour les arbres Lambda qui renverra aussi les
-hashs des sous-arbre ainsi que leurs poids.
+La définition des empreintes se dérive à partir de cette notion de glyphe
+comme suit.
 
-La fonction de hash est donc de type $hash : Lambda \to List_*(H)$.
+\begin{defn}
+On appelle \textit{$f$-empreinte d'un arbre de syntaxe}~$t$, le
+multi-ensemble~$E_f(t)$ formé des $f$-glypes de ses sous-arbres.
+\end{defn}
 
-%todo Pourquoi ?
-Les hashs "atomiques" sont fait à l'aide de MD5.
+Il reste maintenant à décider quelle fonction de hachage utiliser.  En
+nous appuyant sur les conclusions de~Chilowicz et ses
+coauteurs~\cite{chilowicz:hal-00627811}, nous avons décidé d'utiliser
+intensivement la fonction de hachage cryptographique MD5. Pour chaque
+n{\oe}ud de l'arbres, on calcule une clé de hachage qui s'appuie sur
+le nom de la construction utilisée et, pour procéder
+incrémentalement~\cite{DBLP:conf/ml/FilliatreC06}, sur les clés de
+hachage des sous-arbres.
 
-\subsection{Comment combiner des hash}
-
-\subsection{Comment hasher les feuilles}
+Dans un programme, la valeur d'un litéral est très souvent liée au
+contexte d'application. Du point de vue de la recherche de redondance, nous
+estimons que ces valeurs constituent une forme de bruit à ignorer.
+Pour que la valeur exacte des litéraux n'influence pas notre recherche
+de redondance, nous avons donc décidé de ne pas prendre en compte leurs
+valeurs dans le calcul de la clé de hachage.
