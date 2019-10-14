@@ -29,6 +29,15 @@ Une approche est de ne conserver que les empreintes des "gros" sous-arbres, afin
 
 \subsection{Résultats}
 
-Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus gros: celui des réponses des étudiants de troisième année à la question "implémentez la fonction \verb|rev|".
+Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus gros: celui des réponses des étudiants de troisième année à la question "implémentez la fonction ~\iocaml{rev}". 154 codes ont eu tous les points. Sur ces codes, {\Asak} produit 9 classes:
 
-\am{Quoi mettre ? Une capture d'écran ? Une description des classes obtenues ?}
+\begin{enumerate}
+\item 95 étudiants: Les codes ajoutant le premier élément à la fin du reste de la liste renversée récursivement.
+\item 41 étudiants: Les codes définissant une fonction auxiliaire récursive terminale.
+\item 5 étudiants : Les codes utilisant une fonction auxiliaire non-locale.
+\item 4 étudiants: Les codes stockant le résultat de l'appel récursif dans une variable avant d'ajouter le premier élément à la fin.
+\item 3 étuditants : Les codes utilisant ~\iocaml{List.rev}
+\item 3 étudiants: Les codes utilisant ~\iocaml{List.fold_left}
+\item 2 étudiants: Les codes utilisant ~\iocaml{List.fold_right}
+\item 1 étudiant: Les codes utilisant une structure ~\iocaml{if then else} au lieu du filtrage par motif.
+\end{enumerate}
