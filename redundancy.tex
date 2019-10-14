@@ -1,33 +1,27 @@
 %!TEX root = root.tex
 
-La redondance de code est un des fléaux de l'informatique moderne. Elle entraine inévitablement une grande difficulté de maintien (si l'on change une définition, il faudrait changer tous ses clones), de compréhension (nous ne dénombrons pas moins de 30 noms différents pour la célèbre fonction \verb|Option.map| dans la moitié des paquets \Opam) et des pertes de temps énorme consacrés à redéfinir des fonctions usuelles (nous dénombrons 142 implémentations de \verb|Option.map| dans la moitié des paquets \Opam).
+La redondance de code est un des fléaux de l'informatique moderne. Elle entraine inévitablement une grande difficulté de maintien (si l'on change une définition, il faudrait changer tous ses clones), de compréhension (nous ne dénombrons pas moins de 30 noms différents pour la célèbre fonction \iocaml{Option.map} dans la moitié des paquets \Opam) et des pertes de temps énorme consacrés à redéfinir des fonctions usuelles (nous dénombrons quelques 142 implémentations de ~\iocaml{Option.map}  dans la moitié des paquets \Opam).
 
 Comme le lecteur avisé l'a compris, nous avons lancé {\Asak} sur l'ensemble des paquets {\Opam}.
 
 \subsection{Approche utilisée}
 
-Un premier obstacle est la construction de l'entièreté des paquets {\Opam} afin d'obtenir les expressions lambda des tous leurs fichiers sources.
+Un premier obstacle est la construction de l'entièreté des paquets {\Opam} afin d'obtenir les arbres {\LambdaCode} des tous leurs fichiers sources.
 
-Nous avons choisi de travailler à l'aide d'un compilateur modifié qui normalise et exporte les arbres lambdas tout ce qu'il compile vers un fichier. Il nous a ensuite suffit d'essayer d'installer chaque paquet {\Opam} à l'aide de ce compilateur. Nous avons donc développé un outil très léger permettant de lancer toutes ces opérations dans un switch {\Opam}.
+Nous avons choisi de travailler à l'aide d'un compilateur modifié qui normalise et exporte les arbres {\LambdaCode} de tout ce qu'il compile vers un fichier. Il nous a ensuite suffit d'essayer d'installer chaque paquet {\Opam} à l'aide de ce compilateur. Nous avons donc développé un outil permettant de lancer toutes ces opérations dans un switch {\Opam}. En lançant la construction sur 4 images {\Docker} séparées traitant chacune un quart des paquets {\Opam}, il a fallu 20 heures pour obtenir l'ensemble des arbres {\LambdaCode} pouvant être installés.
 
 \subsection{Analyse des résultats}
 
 Nous avons réussi à compiler 1250 paquets sur les 2428 paquets que compte à ce jour le dépôt {\Opam}. Tous les paquets n'ont pas pu être installé car certains:
 
 \begin{itemize}
-\item Ne compilent pas avec {\OCaml} 4.08.01
-\item Entrent en conflit avec {\OCaml} 4.08.01
-\item Dépendent de librairies C non-installées
+\item Ne compilent pas avec {\OCaml} 4.08.01.
+\item Entrent en conflit avec {\OCaml} 4.08.01.
+\item Dépendent de librairies C non-installées.
 \end{itemize}
 
 Sur ces 1250 paquets, nous avons extraits 356 703 définitions toplevel strictement différentes (c'est-à-dire sans compter les définitions d'un même paquet de deux versions différentes qui produisent la même empreinte).
 
-En ne conservant que les empreintes des arbres de plus 30 nœuds (limite calculatoire de notre implémentation), ces définitions ont été classées en 168 307 classes, dont 36 640 avec strictement plus d'un élément (c'est-à-dire que nous avons identifié au moins 36 640 doublons).
+En ne conservant que les empreintes des arbres de plus 30 nœuds (limite calculable en temps raisonnable de notre implémentation), ces définitions ont été classées en 168 307 classes, dont 36 640 avec strictement plus d'un élément (c'est-à-dire que nous avons identifié au moins 36 640 doublons). Le tout a été calculé en 20 minutes sur une machine disposant de 80 cœurs.
 
 \subsubsection{Analyse des classes les plus grandes}
-\begin{enumerate}
-\item Avec 21 429 éléments, la classe des constantes domine toutes les autres. En effet, il est très courant de définir une constante via une définition toplevel, et comme notre outil abstrait les constantes, elles ont toute la même empreinte.
-\item Avec 18 177 éléments vient la classe des synonymes.
-\item Avec 13 437 éléments vient celles de Coq.
-\item Avec 6 210 éléments vient celles des références à des constantes.
-\end{enumerate}
