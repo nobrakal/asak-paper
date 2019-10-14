@@ -133,10 +133,11 @@ contribution à l'arbre global est important : nous pondérons donc
 la clé de hachage par ce nombre de n{\oe}uds.
 
 \begin{defn}
-On appelle $f$-\textit{glyphe d'un arbre de syntaxe}~$t$, le couple
-formé $H_f(t)$ d'un entier 63 bits correspondant à son nombre de n{\oe}uds et
-d'un entier 128-bits correspondant à l'image de cet arbre à travers
-une fonction de hachage~$f$ donnée.
+On appelle $f$-\textit{glyphe d'un arbre de syntaxe}~$t$, le
+couple~$H_f(t)$ formé d'un entier 63 bits correspondant à son nombre
+de n{\oe}uds et d'un entier 128-bits correspondant à l'image de cet
+arbre à travers une fonction de hachage~$f$ donnée. Pour un glype~$g$
+donné, on note son poids~$w(g)$ et sa clé de hachage~$h(g)$.
 \end{defn}
 
 La définition des empreintes se dérive à partir de cette notion de glyphe
@@ -144,7 +145,7 @@ comme suit.
 
 \begin{defn}
 On appelle \textit{$f$-empreinte d'un arbre de syntaxe}~$t$, le
-multi-ensemble~$E_f(t)$ formé des $f$-glypes de ses sous-arbres.
+multi-ensemble~$E_f(t)$ formé des $f$-glyphes de ses sous-arbres.
 \end{defn}
 
 Il reste maintenant à décider quelle fonction de hachage utiliser.  En

@@ -1,85 +1,111 @@
 %!TEX root = root.tex
 
-Une première approche est de partitionner une liste de code selon la fonction de hash: deux codes sont équivalents s'ils partagent exactement la même liste de hash. Cependant, cela ne permet pas de détecter que deux codes sont "proches". Par exemple, avec
+Partitionner un corpus vis-à-vis de l'égalité entre empreintes permet
+déjà de regrouper des programmes syntaxiquement distincts mais qui
+partagent exactement la même structure. Nous souhaitons aller plus loin en regroupant des
+programmes qui se ressemblent même si leurs structures respectives
+diffèrent légèrement. Considérons par exemple:
 
-\begin{minted}{OCaml}
+\begin{ocaml}
 let id1 x = print_endline "debug"; x
 let id2 x = x
-\end{minted}
+\end{ocaml}
+\noindent \iocaml{id1} et \iocaml{id2} n'ont pas le même glyphe mais
+on peut difficilement ignorer leur ressemblance!
 
-\verb|id1| et \verb|id2| n'ont pas la même liste de hash (et nous ne voulons pas qu'ils l'aient), mais nous voudrions quand même détecter que les deux codes se ressemblent. Nous sommes donc revenu à généraliser la partition des codes selon leur hash en une partition selon une mesure de similarité entre codes: il s'agit de faire faire un clustering.
+Comme nous l'avons expliqué précédemment, nous utilisons un algorithme
+de partitionnement hiérarchique ascendant qui a besoin d'une notion
+de dissimilarité pour fonctionner.
 
-De nombreuses méthodes de clustering existent. Ne connaissant pas a priori le nombre de classes recherchées, nous avons décidé de nous orienter vers un clustering hiérarchique agglomératif: on regroupe les deux classes les plus proches (typiquement dans un arbre appelé dendrogramme) puis on répète l'opération jusqu'à n'avoir qu'une seule grande classe.
-
-Nous introduisons cependant une légère variante: notre algorithme retourne une liste de classe infiniment distante. En effet, nous ne voulons pas regrouper tous les codes en une unique classe d'équivalence.
-
-Nous devons donc définir deux choses:
-\begin{itemize}
-\item La distance entre deux listes de hash.
-\item La distance entre deux classes de liste de hash.
-\end{itemize}
-
-\subsection{Distance entre deux listes de hash}
-Il nous faut définir une distance, ou plus précisément une mesure de dissimilarité entre deux listes de hash.
-
+\begin{defn}
+Soient $X$ et $Y$ deux empreintes. La \textit{dissimilarité} $d(X, Y)$ entre~$X$ et~$Y$
+est une valeur de $\mathbb{N} \cup \{ \infty \}$ définie comme suit:
 \begin{align*}
-d &: List_n(H) \times List_m(H) \to \mathbb{N} \cup \{\infty\} \\
 d (X,Y) &=
 \begin{cases}
 	\infty & \text{si $X \cap Y = \emptyset$} \\
-	\sum\limits_{h \in X \Delta Y} (fst\ h) & \text{sinon}
+	\sum\limits_{g \in X \Delta Y} w(g) & \text{sinon}
 \end{cases}
 \end{align*}
+\noindent où $X \Delta Y$ est la différence symétrique entre deux multi-ensembles~$X$ et~$Y$.
+\end{defn}
 
-%todo Proprement définir la notion de différence symmétrique pour deux listes
-Où $X \Delta Y$ est la différence symétrique entre deux listes $X$ et $Y$.
+Cette définition n'est pas très standard car elle sépare de façon très
+brutale les programmes qui ne partagent aucun sous-terme. Ce choix
+garantit que deux programmes sans rapport ne pourront jamais
+apparaître dans la même classe. Ainsi, le dendrogramme final sera
+composé d'une union de classes infiniment distantes les unes des
+autres. Nous pensons que cette propriété améliore la lisibilité des
+résultats. Un autre avantage de cette définition est de permettre
+d'accélérer significativement l'algorithme de partitionnement: quand
+un individu est infiniment éloigné d'une classe~$C$, il n'est plus
+nécessaire de le comparer avec les classes parentes de~$C$.
 
-Si deux listes ne partagent pas un seul hash, elles sont donc infiniment distantes. Sinon, on somme le poids des arbres qu'elles n'ont pas en commun.
+Notez que cette notion de dissimilarité n'est pas une distance. En
+effet, elle ne vérifie pas l'inégalité triangulaire. Par contre, cette
+dissimilarité est une fonction de séparation ($\forall X,Y,\ d(X,Y) =
+0 \iff X = Y$) et symétrique ($\forall X,Y,\ d(X,Y) = d(Y,X)$). Cette
+propriété est suffisante pour appliquer notre algorithme de
+partitionnement.
 
-Il est facile de voir que $d$ est une fonction de séparation ($\forall X,Y,\ d(X,Y) = 0 \iff X = Y$) et symétrique ($\forall X,Y,\ d(X,Y) = d(Y,X)$). Elle ne respecte cependant pas l'inégalité triangulaire et n'est pas donc une distance.
+L'algorithme procède par itération sur une liste de classes
+d'empreintes. On suppose que l'on sait fusionner deux classes
+d'empreintes et que l'on garde trace de ces fusions pour pouvoir
+produire un dendrogramme par classe.
 
+\begin{ocaml}
+(* Types pour les classes d'empreintes et les partionnements. *)
+type cluster and clustering = cluster list
+(* L'opération de fusion. *)
+val merge : cluster -> cluster -> clustering -> clustering
+(* Une classe avec une unique empreinte. *)
+val singleton : fingerprint -> cluster
+\end{ocaml}
 
-\subsection{Distance entre deux classes de liste de hash}
-Il existe ici plusieurs approches.
-%todo Pourquoi celle-ci ?
-Nous avons décidé d'étendre $d$ à:
+Il faut étendre la notion de dissimilarité aux paires de classes.
 
+\begin{defn}
+La dissimilarité~$d(\alpha, \beta)$ entre deux classes
+d'empreintes~$\alpha$ et~$\beta$ est:
 \begin{align*}
-d &: \mathcal{P}(List_*(H)) \times \mathcal{P}(List_*(H)) \to \mathbb{N} \cup \{\infty\}\\
 d(\alpha,\beta) &= \max\limits_{X \in \alpha, Y \in \beta} d(X,Y)
 \end{align*}
+\end{defn}
 
-Cette approche est classique et donne lieu à un \emph{complete linkage clustering}.
+Cette définition de la dissimilarité inter-classes est classique et
+donne lieu à un partitionnement à liaison complète (\emph{complete
+  linkage clustering}).\yrg{Citation!}
 
-\subsection{Algorithme}
-L'algorithme de clustering est le suivant:
+Enfin, on suppose l'existence d'une fonction capable de déterminer
+les deux classes les plus proches dans le partitionnement courant:
 
-\begin{minted}{OCaml}
-type distance = Infinity | Regular of int
-type hash
-type cluster
+\begin{ocaml}
+type dissimilarity = Regular of int | Infinity
 
-(* Groupe les noms ayant le même hash *)
-val group_by_hash : (name * hash) list -> (hash * name list) list
-(* Crée un cluster singleton *)
-val singleton : (hash * name list) -> cluster
 (* Renvoie les deux clusters les plus proches selon d, ainsi que leur distance *)
-val get_closest_with_d : cluster list -> (distance * (cluster * cluster))
-(* Fusionne deux clusters *)
-val merge : cluster -> cluster -> cluster list -> cluster list
+val get_closest_with_d : clustering -> (dissimilarity * (cluster * cluster))
+\end{ocaml}
 
-(* Renvoie une liste de cluster deux à deux infiniment distants *)
+L'algorithme de partitionnement hiérarchique est donné par le programme {\OCaml} suivant:
+
+\begin{ocaml}
+(* Renvoie une liste de classes deux à deux infiniment dissimilaires. *)
 let rec run_clustering xs =
   match xs with
   | [] | [_] -> xs
-  | _ ->
-    let (p, (u,v)) = get_closest_with_d xs in
-    match p with
-    | Infinity -> xs
-    | Regular p -> run_clustering (merge u v xs)
+  | _ -> match get_closest_with_d xs with
+         | (Infinity, _) -> xs
+         | (Regular p, (u, v)) -> run_clustering (merge u v xs)
 
-let cluster (hash_list : (name * hash) list) : cluster list =
-  run_clustering @@
-    List.map singleton @@
-      group_by_hash hash_list
-\end{minted}
+let make_clusters : fingerprint list -> cluster list = fun fs ->
+  run_clustering @@ List.map singleton fs
+\end{ocaml}
+
+Cette formulation de l'algorithme est malheureusement trop naïve pour
+être implémentée directement. En effet, en pire cas, la complexité de
+cet algorithme est cubique en fonction de la longueur de la
+liste~\iocaml{fs}, c'est-à-dire du nombre de définitions du
+corpus et dans nos cas d'usage, ce nombre de l'ordre de~$10^6$.
+
+\yrg{Faire le point avec Alexandre sur les optimisations :
+  surapproximation et parallélisme, c'est tout?}
