@@ -1,10 +1,11 @@
 %!TEX root = root.tex
 
 Partitionner un corpus vis-à-vis de l'égalité entre empreintes permet
-déjà de regrouper des programmes syntaxiquement distincts mais qui
-partagent exactement la même structure. Nous souhaitons aller plus loin en regroupant des
-programmes qui se ressemblent même si leurs structures respectives
-diffèrent légèrement. Considérons par exemple:
+déjà de regrouper des programmes syntaxiquement distincts mais qui ont
+des structures calculatoires très proches, sinon égales. Nous
+souhaitons aller plus loin en regroupant des programmes qui se
+ressemblent même si leurs structures respectives diffèrent
+plus significativement. Considérons par exemple:
 
 \begin{ocaml}
 let id1 x = print_endline "debug"; x
@@ -33,20 +34,16 @@ d (X,Y) &=
 Cette définition n'est pas très standard car elle sépare de façon très
 brutale les programmes qui ne partagent aucun sous-terme. Ce choix
 garantit que deux programmes sans rapport ne pourront jamais
-apparaître dans la même classe. Ainsi, le dendrogramme final sera
-composé d'une union de classes infiniment distantes les unes des
+apparaître dans la même classe. Ainsi, le résultat final sera composé
+d'une union disjointe de classes infiniment distantes les unes des
 autres. Nous pensons que cette propriété améliore la lisibilité des
-résultats. Un autre avantage de cette définition est de permettre
-d'accélérer significativement l'algorithme de partitionnement: quand
-un individu est infiniment éloigné d'une classe~$C$, il n'est plus
-nécessaire de le comparer avec les classes parentes de~$C$.
+résultats.
 
 Notez que cette notion de dissimilarité n'est pas une distance. En
-effet, elle ne vérifie pas l'inégalité triangulaire. Par contre, cette
-dissimilarité est une fonction de séparation ($\forall X,Y,\ d(X,Y) =
-0 \iff X = Y$) et symétrique ($\forall X,Y,\ d(X,Y) = d(Y,X)$). Cette
-propriété est suffisante pour appliquer notre algorithme de
-partitionnement.
+effet, elle ne vérifie pas l'inégalité triangulaire. Par contre, c'est
+une fonction de séparation ($\forall X,Y,\ d(X,Y) = 0 \iff X = Y$) et
+symétrique ($\forall X,Y,\ d(X,Y) = d(Y,X)$). Cette propriété est
+suffisante pour appliquer l'algorithme de partitionnement.
 
 L'algorithme procède par itération sur une liste de classes
 d'empreintes. On suppose que l'on sait fusionner deux classes
@@ -75,8 +72,8 @@ d(\alpha,\beta) &= \max\limits_{X \in \alpha, Y \in \beta} d(X,Y)
 \end{defn}
 
 Cette définition de la dissimilarité inter-classes est classique et
-donne lieu à un partitionnement à liaison complète (\emph{complete
-  linkage clustering}).\yrg{Citation!}
+donne lieu à un partitionnement dit ``à liaison complète'' (\emph{complete
+  linkage clustering})~\cite{DBLP:books/crc/aggarwal13/ReddyV13}.
 
 Enfin, on suppose l'existence d'une fonction capable de déterminer
 les deux classes les plus proches dans le partitionnement courant:
@@ -115,10 +112,10 @@ s'appuie sur les quatre ingrédients suivants :
 \begin{enumerate}
 \item
   On commence par séparer les empreintes en deux ensembles : celles
-  qui infiniment dissimilaires des autres, et celles qui ne le sont
-  pas. Cette phase permet d'éliminer les définitions qui ne partagent
-  absolument rien avec les autres, et sont donc exclues de toute
-  forme de redondance. Cette passe a un coût quadratique en le
+  qui sont infiniment dissimilaires des autres, et celles qui ne le
+  sont pas. Cette phase permet d'éliminer les définitions qui ne
+  partagent absolument rien avec les autres, et sont donc exclues de
+  toute forme de redondance. Cette passe a un coût quadratique en le
   nombre~$D$ d'empreintes.
 \item
   Les dissimilarités inter-empreintes peuvent être précalculées une
@@ -130,7 +127,7 @@ s'appuie sur les quatre ingrédients suivants :
 \item
   On calcule ensuite une surapproximation du partionnement : à l'aide
   d'une structure de type \textit{Union-Find}, on regroupe les
-  empreintes qui ont une dissimilarité relative finie. On sépare ainsi
+  empreintes qui ont une interdissimilarité finie. On sépare ainsi
   les empreintes qui ne pourront jamais être dans la même classe car
   elles sont infiniment dissimilaires deux-à-deux. Ce calcul a un coût
   en $O(D^2 \cdot log D \cdot \alpha(D))$. \yrg{Ici, on pourrait
@@ -139,6 +136,8 @@ s'appuie sur les quatre ingrédients suivants :
   Pour finir, l'algorithme de partitionnement naïf est exécuté en
   parallèle sur toutes les classes du partionnement sur-approximé.
   Cette étape a un coût cubique en la taille de chaque partition, ce
-  qui réduit significativement le temps d'exécution de l'algorithme.
+  qui réduit significativement le temps d'exécution de l'algorithme
+  car, sur nos exemples, la cardinalité des classes ne dépasse
+  jamais~$10^4$.
 
 \end{enumerate}
