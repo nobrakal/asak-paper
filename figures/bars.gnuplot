@@ -3,8 +3,8 @@ set logscale y
 set xtics rotate by -45
 set tics scale 0
 set xlabel "Cardinal des classes"
-set ylabel "Nombre de classe"
-set title "Nombre de classe en fonction de leur cardinal"
+set ylabel "Nombre de classes"
+set title "Nombre de classes en fonction de leur cardinal"
 
 set term png size 1000, 500
 
