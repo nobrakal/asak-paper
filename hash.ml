@@ -165,10 +165,10 @@ let hashes =
   Printf.printf "\\end{multicols}\n";
   Printf.printf "\\[\\begin{array}{rcl}\n";
   List.iter (fun (c, w0, h0, e) ->
-                  Printf.printf "E(D_%s) &=& \\{ \\begin{bmatrix} %02d \\\\ %02d \\end{bmatrix} %s \\} \\\\[1em]\n" c
+                  Printf.printf "E(D_%s) &=& \\{ \\begin{bmatrix} %02d \\\\ %02d \\end{bmatrix} %s \\} \\\\[1.8em]\n" c
                     h0 w0 (String.concat "\\,"
                              (List.mapi (fun i (w, h) ->
-                                  (if i = 22 then Printf.sprintf "\\\\ & & \\;\\;" else "") ^
+                                  (if i = 22 then Printf.sprintf "\\\\[1em] & & \\;\\;" else "") ^
                                     Printf.sprintf "\\begin{bmatrix} %02d \\\\ %02d \\end{bmatrix}" h w)
                                 e))) factorized;
   Printf.printf "\\end{array}\\]\n"

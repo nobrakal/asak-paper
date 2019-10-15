@@ -203,13 +203,33 @@ pourra en observer la trace d'exécution sur notre corpus jouet
 dans la figure~\ref{fig:clustering-jouet}.
 
 \begin{figure}
+\underline{Matrice de dissimilarité:}
+\[\scriptsize
+\begin{pmatrix}
+0 & 0 & 144 & \infty & \infty & \infty \\
+0 & 0 & 144 & \infty & \infty & \infty \\
+144 & 144 & 0 & \infty & \infty & \infty \\
+\infty & \infty & \infty & 0 & 71 & \infty \\
+\infty & \infty & \infty & 71 & 0 & \infty \\
+\infty & \infty & \infty & 71 & \infty & \infty \\
+\end{pmatrix}
+\]
 
-Donner la (demi-)matrice de dissimilarité.
+\underline{Évolution du partitionnement:}
+\[
+\begin{array}{rclr}
+\text{Étape 1} & \{ 1, 2 \}, \{ 3 \}, \{ 4 \}, \{ 5 \}, \{ 6 \}
+& \text{car }1 \text{ et } 2 \text{ont la même empreinte.} \\
+\text{Étape 2} & \{ 1, 2 \}, \{ 3 \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
+& \text{car }4 \text{ et } 5 \text{ sont les plus proches.} \\
+\text{Étape 3} & \{ \{ 1, 2 \}, \{ 3 \} \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
+& \text{car }3 \text{ et } \{ 1, 2 \} \text{ sont les plus proches.} \\
+\text{Étape 4} & \{ \{ 1, 2 \}, \{ 3 \} \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
+& \text{car toutes les classes sont absolument dissimilaires.}
+\end{array}
+\]
 
-Donner les étapes du partitionnements (avec les valeurs de dissimilarité entre classes).
-
-\caption{Trace du partitionnement des définitions du corpus jouet s'appuyant sur la dissimilarité
-des définitions entre elles.}
+\caption{Trace du partitionnement des définitions du corpus jouet.}
 \label{fig:clustering-jouet}
 \end{figure}
 
