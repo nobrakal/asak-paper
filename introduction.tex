@@ -1,11 +1,11 @@
 %!TEX root = root.tex
 
 ``Ne vous répétez pas!'' est une injonction permanente qui plane au
-dessus de tout programmeur cherchant à écrire un logiciel de qualité.
-Ce principe vise une situation idéale où une connaissance donnée n'a
-qu'une seule représentation dans le logiciel : si cette connaissance
-est imparfaite -- et c'est souvent le cas -- on s'assure alors qu'elle
-pourra être corrigée efficacement.
+dessus de tout programmeur cherchant à écrire un logiciel de
+qualité~\cite{Hunt:2000:PPJ:320326}. Ce principe vise une situation
+idéale où une connaissance donnée n'a qu'une seule représentation dans
+le logiciel : si cette connaissance est imparfaite -- et c'est souvent
+le cas -- on s'assure alors qu'elle pourra être corrigée efficacement.
 
 Il arrive parfois qu'un corpus de code source contienne des
 redondances que les programmeurs n'ont pas pu ou pas voulu éviter. Par
@@ -106,40 +106,53 @@ calculatoires principaux. Nous analyserons les avantages
 limitations (section~\ref{sec:limitations}) de ce choix de conception.
 
 Comme son nom l'indique, {\LambdaCode} est un $\lambda$-calcul
-(étendu). Nous nous sommes donc moralement ramené au
-problème de la construction d'une mesure de similarité syntaxique
-entre deux termes du $\lambda$-calcul. En utilisant une représentation
-de De Bruijn et en effectuant quelques réductions inoffensives, on
-gomme effectivement de cette façon certaines différences sans intérêt
-entre deux termes {\OCaml}. Seulement, pour pouvoir comparer
-rapidement des milliers de $\lambda-$termes deux-à-deux, on doit se
-donner une représentation compacte des $\lambda$-termes. Nous
-introduisons donc un prétraitement des $\lambda$-termes pour calculer leurs \textit{empreintes}
+(étendu). Nous nous sommes donc moralement ramené au problème de la
+construction d'une mesure de similarité syntaxique entre deux termes
+du $\lambda$-calcul. En utilisant une représentation de De Bruijn et
+en effectuant quelques réductions inoffensives, on gomme effectivement
+de cette façon certaines différences sans intérêt entre deux termes
+{\OCaml}. Seulement, pour pouvoir comparer rapidement des milliers de
+$\lambda-$termes deux-à-deux, on doit se donner une représentation
+compacte des $\lambda$-termes. Nous introduisons donc un prétraitement
+des $\lambda$-termes pour calculer leurs \textit{empreintes}
 respectives : l'empreinte d'un $\lambda$-terme est un ensemble
 d'entiers qui caractérisent ses aspects syntaxiques importants. C'est
-une idée déjà présente dans la littérature mais nous la raffinons pour
-l'appliquer sur des $\lambda$-termes.  La définition de ce
-prétraitement sur des $\lambda$-termes est donc la seconde
-contribution présentée par cet article.
+une idée déjà présente dans la
+littérature~\cite{chilowicz:hal-00627811} mais nous la raffinons pour
+l'appliquer à des $\lambda$-termes.  La définition de ce prétraitement
+sur des $\lambda$-termes est donc la seconde contribution présentée
+par cet article.
 
 À ce stade, on peut donc mesurer la similarité entre chaque paire de
 termes d'un corpus. L'ensemble de ces mesures constitue une grande
-quantité d'information peu structurée difficilement exploitable
-directement, en tout cas pour nos cas d'usage. Pour pallier à ce
-problème, nous proposons de partitionner hiérarchiquement les termes
-en s'appuyant sur leur mesure de dissimilarité
+quantité d'information peu structurée qui est donc difficilement
+exploitable directement, en tout cas, pour nos cas d'usage. Pour
+pallier à ce problème, nous proposons de partitionner hiérarchiquement
+les termes en s'appuyant sur leur mesure de dissimilarité
 (section~\ref{sec:clustering}). Encore une fois, notre contribution
-consiste à raffiner un algorithme déjà présent dans la littérature, la
-classification ascendante hiérarchique. Cette classification produit
-des dendrogrammes, particulièrement adaptés à l'exploration des
-classes de programmes issues de nos corpus.
+consiste à raffiner et implémenter un algorithme déjà présent dans la
+littérature, la classification ascendante hiérarchique. Cette
+classification produit des dendrogrammes, particulièrement adaptés à
+l'exploration progressive des classes de programmes issues de nos
+corpus.
 
-Pour que notre travail soit réutilisable dans des situations
-différentes de nos cas d'usage, nous avons développé une bibliothèque
-nommée {\Asak}\footnote{Cette bibliothèque fait des partitions (de codes similaires), son nom est donc tiré de la musique: asak est un genre de chansons touareg.}.
-Cette bibliothèque est librement disponible sous la forme d'un paquet {\Opam}.
-Elle nous a permis d'introduire un système de classification automatique
-des copies dans {\LearnOCaml} (section~\ref{sec:partition}). Elle nous a
-aussi permis d'implémenter un outil de recherche de redondance dans
-l'ensemble des paquets {\Opam} (section~\ref{sec:redundancy}). Ces outils
-constituent la dernière contribution présentée par cet article.
+Pour que ce travail soit réutilisable dans des situations différentes
+de nos cas d'usage, nous avons développé une bibliothèque nommée
+{\Asak}\footnote{Cette bibliothèque fait des partitions (de codes
+similaires), son nom est donc tiré de la musique: asak est un genre de
+chansons touareg.}.  Cette bibliothèque est librement disponible sous
+la forme d'un paquet {\Opam}.  Elle nous a permis d'introduire un
+système de classification automatique des copies dans
+{\LearnOCaml}~\cite{learnocaml} (section~\ref{sec:partition}). Elle
+nous a aussi permis d'implémenter un outil de recherche de redondance
+dans l'ensemble des paquets {\Opam}
+(section~\ref{sec:redundancy}). Ces outils constituent la dernière
+contribution présentée par cet article.
+
+Cet article décrit la première version d'{\Asak} : il s'agit d'un
+travail de recherche en cours dont les résultats préliminaires nous
+ont semblé suffisamment intéressants pour être communiqués. Il reste
+encore beaucoup à faire pour rendre l'outil plus performant et plus
+pertinent. Nous évaluons ses limitations
+(section~\ref{sec:limitations}) et donnons les pistes à explorer pour
+tenter de les surmonter (section~\ref{sec:conclusion}).
