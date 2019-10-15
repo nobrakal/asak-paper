@@ -59,11 +59,11 @@ strictement plus d'un élément (c'est-à-dire que nous avons identifié
 au moins $40935$ doublons). Le tout a été calculé en $40$ minutes sur
 la machine décrite dans la section précédente.
 
-Donner les histogrammes, la moyenne, l'écart-type pour les
-informations suivantes :
-- la taille des classes
-- le nombre de paquets qui contribuent à chaque classe
-- la taille des définitions
+Voici un diagramme à barre synthétisant la forme des classes obtenues (attention, l'échelles des ordonnées est logarithmique).
+
+\begin{figure}[h]
+	\includegraphics[scale=0.6]{figures/bars.png}
+\end{figure}
 
 \paragraph{Aspects qualitatifs}
 
@@ -73,7 +73,7 @@ Les classes comprenant plus de 50 éléments sont majoritairement:
 \item Soit du code généré par des outils comme \verb|Coq|, \verb|Menhir|, \verb|AWS|...
 \end{itemize}
 
-Cependant, certaines classes représentent de véritables possibilités de factorisations. Par exemple, nous trouvons une classe contenant $134$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}. Cette classe capture aussi les fonctions similaires concernant les types isomophes au type \iocaml{option}. Par exemple, cette classe contient la fonction (provenant du module \iocaml{Evd} de \verb|Coq|):
+Cependant, certaines classes représentent de véritables possibilités de factorisations. Par exemple, nous trouvons une classe contenant $134$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}. Cette classe capture aussi les fonctions similaires concernant les types isomorphes au type \iocaml{option}. Par exemple, cette classe contient la fonction (provenant du module \iocaml{Evd} de \verb|Coq|):
 
 \begin{minted}{OCaml}
 let map_evar_body f = function
