@@ -1,9 +1,6 @@
-Dans cette section, nous décrivons le fonctionnement de notre outil
-sur un corpus d'exemple et nous expliquons certains de nos choix de
-conception par la même occasion.
-
-\input{revs}
-
+%% Dans cette section, nous décrivons le fonctionnement de notre outil
+%% sur un corpus d'exemple et nous expliquons certains de nos choix de
+%% conception par la même occasion.
 \paragraph{Que produit {\Asak}?}
 {\Asak} compare entre elles les définitions globales d'un ensemble de
 modules {\OCaml}. La figure~\ref{fig:example:sources} contient cinq
@@ -14,7 +11,7 @@ renvoie la liste mirroir d'une liste prise en argument et l'enseignant
 aura reconnnu des réponses typiques d'étudiants apprenti-programmeurs
 fonctionnels. Sur ce corpus, notre outil produit l'ensemble de
 dendrogrammes de la figure~\ref{fig:toy-classes}.
-
+\input{revs}
 \begin{figure}
 \begin{center}
 \begin{tikzpicture}[sloped, scale=0.4]
@@ -48,7 +45,7 @@ dendrogrammes de la figure~\ref{fig:toy-classes}.
 \draw[->,-triangle 60] (-7,0) -- node[above]{dissimilarité} (-7,6);
 \end{tikzpicture}
 \end{center}
-\caption{Ensemble de dendrogrammes correspond à la classification du corpus jouet.}
+\caption{Ensemble de dendrogrammes pour la classification du corpus jouet.}
 \label{fig:toy-classes}
 \end{figure}
 
