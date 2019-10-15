@@ -69,18 +69,14 @@ Voici un diagramme à barre synthétisant la forme des classes obtenues (attenti
 
 Les classes comprenant plus de 50 éléments sont majoritairement:
 \begin{itemize}
-\item Soit des très petites fonctions (des variables globales ou des fonctions constantes).
+\item Soit des très petites fonctions (des variables globales ou des fonctions constantes). Comme {\Asak} ne prend pas en compte la valeur des littéraux, ces dernières sont toutes regroupées.
 \item Soit du code généré par des outils comme \verb|Coq|, \verb|Menhir|, \verb|AWS|...
 \end{itemize}
 
-Cependant, certaines classes représentent de véritables possibilités de factorisations. Par exemple, nous trouvons une classe contenant $134$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}. Cette classe capture aussi les fonctions similaires concernant les types isomorphes au type \iocaml{option}. Par exemple, cette classe contient la fonction (provenant du module \iocaml{Evd} de \verb|Coq|):
+Cependant, certaines classes représentent de véritables possibilités de factorisation. Par exemple, nous trouvons une classe contenant $122$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}, que l'on trouve sous pas moins de $32$ noms différents. Cette classe capture aussi les fonctions similaires concernant les types isomorphes au type \iocaml{option}. Par exemple, cette classe contient la fonction \iocaml{map_evar_body} (provenant du module \iocaml{Evd} de \verb|Coq|):
 
 \begin{minted}{OCaml}
 let map_evar_body f = function
   | Evar_empty -> Evar_empty
   | Evar_defined d -> Evar_defined (f d)
 \end{minted}
-
-- les paquets qui ont le plus de redondance interne
-
-- les couples de paquets qui se ressemblent le plus
