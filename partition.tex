@@ -59,20 +59,21 @@ Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus
 gros: celui des réponses des étudiants de troisième année à la
 question "Implémentez la fonction~\iocaml{rev}". $154$~réponses ont
 obtenu tous les points. Sur ce corpus, {\Asak} produit $9$~classes
-dont voici les cardinaux et une description succinte:
-$95$ fois le premier élément est mis à la fin du reste de la liste renversée récursivement ;
-$41$ fois la réponse introduit une fonction auxiliaire récursive terminale ;
-$5$ fois la réponse utilise une fonction auxiliaire non-locale ;
-$4$ fois le résultat de l'appel récursif dans une variable locale et ajoute le premier élément à la fin ;
-$3$ fois la réponse utilise~\iocaml{List.rev};
-$3$ fois la réponse s'appuie sur~\iocaml{List.fold_left} ;
-$2$ fois la réponse s'appuie sur~\iocaml{List.fold_right} ;
-$1$ : la réponse utilise un \iocaml{if-then-else} au lieu du filtrage par motifs.
+dont voici les cardinaux et une description succinte: $95$ fois le
+premier élément est mis à la fin du reste de la liste renversée
+récursivement ; $41$ fois la réponse introduit une fonction auxiliaire
+récursive terminale ; $5$ fois la réponse utilise une fonction
+auxiliaire non-locale ; $4$ fois le résultat de l'appel récursif est
+stocké dans une variable locale et ajoute le premier élément à la fin
+; $3$ fois la réponse utilise~\iocaml{List.rev}; $3$ fois la réponse
+s'appuie sur~\iocaml{List.fold_left} ; $2$ fois la réponse s'appuie
+sur~\iocaml{List.fold_right} ; $1$ fois la réponse utilise
+un \iocaml{if-then-else} au lieu du filtrage par motifs.
 
 L'enseignant peut déduire plusieurs choses de ce rapport. D'abord que
 la plupart des étudiants n'ont pas encore acquis le réflexe d'écrire
 des fonctions sur les listes dont la récursion est en position
-terminale. Il peut constater aussi qu'une minorité d'étudiants
+terminale. Il peut aussi constater qu'une minorité d'étudiants
 n'arrive pas encore à se détacher du paradigme impératif ou à utiliser
 l'analyse de motifs plutôt qu'une expression conditionnelle. Enfin,
 l'enseignant devra aussi revenir sur son code de correction automatique

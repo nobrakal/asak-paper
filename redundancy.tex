@@ -46,7 +46,7 @@ certains paquets dépendent de bibliothèques C non-installées.
 
 Sur ces $1250$ paquets, nous avons extrait $360152$ définitions
 strictement différentes. On a retiré de ce décompte les définitions
-provenant de deux versions différentes d'une même paquet et qui
+provenant de deux versions différentes d'un même paquet et qui
 produisent la même empreinte.
 
 En ne conservant que les empreintes des sous-arbres de plus de~$30$
@@ -84,9 +84,7 @@ cette classe contient la fonction \iocaml{map_evar_body} (provenant du
 module \iocaml{Evd} de \verb|Coq|):
 
 \begin{ocaml}
-let map_evar_body f = function
-  | Evar_empty -> Evar_empty
-  | Evar_defined d -> Evar_defined (f d)
+let map_evar_body f = function Evar_empty -> Evar_empty | Evar_defined d -> Evar_defined (f d)
 \end{ocaml}
 
 Une synthèse complète de l'analyse des paquets~{\Opam} par~{\Asak} sera l'objet
