@@ -55,7 +55,7 @@ de même forme, les identifiants ne sont que des alias les uns des
 autres. En effet, s'il existait une différence sémantique entre deux
 identifiants, les deux codes n'auraient pas la même sémantique.  Nous
 avons donc choisi d'associer la même empreinte à tous les
-identifiants. \yrg{C'est vraiment violent!}
+identifiants. \yrg{C'est vraiment violent!} \am{Oui, mais ça n'est pas un problème ! Les codes sont vraiment très semblables.}
 
 \subsection{Résultats}
 
@@ -69,8 +69,7 @@ dont voici les cardinaux et une description succinte:
 \item $95$: le premier élément est mis à la fin du reste de la liste renversée récursivement.
 \item $41$: la réponse introduit une fonction auxiliaire récursive terminale.
 \item $5$ : la réponse utilise une fonction auxiliaire non-locale.
-\item $4$ : le résultat de l'appel récursif dans une référence et ajoute le premier élément à la fin.
-\yrg{Alexandre, j'ai bien compris ce que tu avais dit autrement?}
+\item $4$ : la réponse utilise stocke le résultat de l'appel récursif dans une référence et ajoute le premier élément à la fin.
 \item $3$ : la réponse utilise~\iocaml{List.rev}.
 \item $3$ : la réponse s'appuie sur~\iocaml{List.fold_left}.
 \item $2$ : la réponse s'appuie sur~\iocaml{List.fold_right}.
