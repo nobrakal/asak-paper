@@ -2,12 +2,27 @@
 
 \subsection{Le presque-sucre syntaxique}
 
-Nous programmons souvent en utilisant des constructions semblant similaires mais qui sont bel et bien des constructions sémantiquement différentes. Cependant {\Asak} est par définition très sensible à la forme de l'arbre {\LambdaCode} et ce "presque-sucre syntaxique" fait différer les arbres de codes pourtant très proches. Il en résulte qu'{\Asak} n'est \emph{pas} adapté à la détection de plagiat.
+Nous programmons souvent en utilisant des constructions semblant
+similaires mais qui sont bel et bien des constructions sémantiquement
+différentes. Cependant {\Asak} est par définition très sensible à la
+forme de l'arbre {\LambdaCode} et ce "presque-sucre syntaxique" fait
+différer les arbres de codes pourtant très proches. Il en résulte
+qu'{\Asak} n'est \emph{pas} adapté à la détection de plagiat.
+\yrg{Je ne suis pas sûr de te suivre. Tu as un exemple concret en tête?}
 
-\subsubsection{Les définitions mutuellement récursives}
+\paragraph{Les définitions mutuellement récursives}
 
-Il est par exemple très courant de définir des fonctions mutuellement récursives alors qu'elles ne le sont pas. Le compilateur n'étant pas capable de différencier ces cas, les arbres engendrés seront très différents selon si des définitions successives ont étés faites via \verb|let| ou \verb|let rec|.
+Il est par exemple très courant de définir des fonctions mutuellement
+récursives alors qu'elles ne le sont pas. Le compilateur n'étant pas
+capable de différencier ces cas, les arbres engendrés seront très
+différents selon si des définitions successives ont étés faites via
+\verb|let| ou \verb|let rec|.
 
-\subsubsection{L'inlining}
+\paragraph{L'inlining}
 
-Nous remplaçons souvent mentalement les variables par leur définition. Il s'agit cependant d'une opération complexe qui affecte souvent la sémantique du programme et que le compilateur se risque rarement à faire. Il en résulte que deux codes ayant exactement la même sémantique, l'un ayant une multitude de définitions factorisées et l'autre non engendrent des arbres très différents.
+Nous remplaçons souvent mentalement les variables par leur
+définition. Il s'agit cependant d'une opération complexe qui affecte
+souvent la sémantique du programme et que le compilateur se risque
+rarement à faire. Il en résulte que deux codes ayant exactement la
+même sémantique, l'un ayant une multitude de définitions factorisées
+et l'autre non engendrent des arbres très différents.

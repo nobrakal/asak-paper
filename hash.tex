@@ -10,7 +10,7 @@ d'empreintes.
 \subsection{$\LambdaCode$ normalisé}
 \label{sec:lambda}
 
-\subsubsection{Présentation de $\LambdaCode$}
+\paragraph{Présentation de $\LambdaCode$}
 
 \input{lambda-syntax}
 
@@ -77,7 +77,7 @@ encore une fois d'une simplification favorable des termes sources
 puisqu'elle envoie des termes sources syntaxiquement distincts mais
 sémantiquement équivalents vers un unique terme~$\LambdaCode$.
 
-\subsubsection{$\alpha$-renommage}
+\paragraph{$\alpha$-renommage}
 
 Le nom des variables est pris en compte lors de la prise d'empreintes.
 Naturellement, nous avons choisi de nous abstraire de ces noms en
@@ -87,7 +87,7 @@ lors d'une définition de fonction) ne jouent aucun rôle. Pour cette
 raison, nous renommons tous les identificateurs des variables liées en
 des identificateurs canoniques qui codent leurs indices de De Bruijn.
 
-\subsubsection{Réduction des définitions locales inoffensives}
+\paragraph{Réduction des définitions locales inoffensives}
 
 En {\OCaml}, et contrairement à {\Coq}, on ne peut pas facilement
 comparer les termes modulo l'évaluation : en effet, l'évaluation d'un
