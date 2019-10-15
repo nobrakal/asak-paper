@@ -1,13 +1,13 @@
 %!TEX root = root.tex
 
-Dans cette section, nous faisons un retour d'expérience sur l'usage
-d'{\Asak} pour la détection de clones dans les paquets~\Opam. Nous
-commençons par détailler notre approche puis quelques résultats
-préliminaires.
+%% Dans cette section, nous faisons un retour d'expérience sur l'usage
+%% d'{\Asak} pour la détection de clones dans les paquets~\Opam. Nous
+%% commençons par détailler notre approche puis quelques résultats
+%% préliminaires.
 
 %% La redondance de code est un des fléaux de l'informatique moderne. Elle entraine inévitablement une grande difficulté de maintien (si l'on change une définition, il faudrait changer tous ses clones), de compréhension (nous ne dénombrons pas moins de 30 noms différents pour la célèbre fonction \iocaml{Option.map} dans la moitié des paquets \Opam) et des pertes de temps énorme consacrés à redéfinir des fonctions usuelles (nous dénombrons quelques 142 implémentations de ~\iocaml{Option.map}  dans la moitié des paquets \Opam).
 
-\subsection{Approche utilisée}
+\paragraph{Approche utilisée}
 
 Contrairement à l'environnement bien contrôlé des
 copies~{\LearnOCaml}, chaque paquet~{\Opam} a un ensemble de
@@ -30,16 +30,16 @@ source et par le chemin du module de la définition dont il est issu.
 processeurs Intel(R) Xeon(R) CPU E5-4640 v2 cadencé à 2.20GHz équipé
 de 756Go de RAM.}, nous avons ensuite parallélisé les (tentatives
 d')installations de l'ensemble des paquets~\Opam. Au bout de~$20$
-heures, nous avons obtenu un corpus de travail dont nous décrivons
-l'analyse avec~{\Asak} dans la section suivante.
+heures, nous avons obtenu un corpus de travail dont nous rapportons
+maintenant l'analyse avec~{\Asak}.
 
-\subsection{Analyse des résultats}
+\paragraph{Portée de l'analyse}
 
 Nous avons réussi à compiler $1250$ paquets sur les $2428$ paquets que
 compte à ce jour le dépôt {\Opam} officiel. Tous les paquets n'ont pas
 pu être installés car
 certains paquets ne compilent pas avec {\OCaml} 4.08.1 ou
-sont en conflit avec {\OCaml} 4.08.1, ou bien encore parce que
+sont en conflit avec {\OCaml} 4.08.1 ; ou bien encore parce que
 certains paquets dépendent de bibliothèques C non-installées.
 
 \paragraph{Aspects quantitatifs}
@@ -49,31 +49,45 @@ strictement différentes. On a retiré de ce décompte les définitions
 provenant de deux versions différentes d'une même paquet et qui
 produisent la même empreinte.
 
-En ne conservant que les empreintes des sous-arbres de plus de~$30$ nœuds
-(limite calculable en temps raisonnable de notre implémentation), ces
-définitions ont été classées en $198841$ classes, dont $40935$ avec
-strictement plus d'un élément (c'est-à-dire que nous avons identifié
-au moins $40935$ doublons). Le tout a été calculé en $40$ minutes sur
-la machine décrite dans la section précédente.
-
-Voici un diagramme à barre synthétisant la forme des classes obtenues (attention, l'échelle des ordonnées est logarithmique).
+En ne conservant que les empreintes des sous-arbres de plus de~$30$
+nœuds (limite calculable en temps raisonnable de notre
+implémentation), ces définitions ont été classées en $198841$ classes,
+dont $40935$ avec strictement plus d'un élément (c'est-à-dire que nous
+avons identifié au moins $40935$ doublons). Le tout a été calculé en
+$40$ minutes sur la machine décrite précédemment. Voici un diagramme à
+barre synthétisant la forme des classes obtenues (attention,
+l'échelle des ordonnées est logarithmique).
 
 \begin{figure}[h]
-	\includegraphics[scale=0.6]{figures/bars.png}
+\begin{center}
+\includegraphics[width=10cm]{figures/bars.png}
+\end{center}
 \end{figure}
 
 \paragraph{Aspects qualitatifs}
 
-Les classes comprenant plus de 50 éléments sont majoritairement:
-\begin{itemize}
-\item Soit des très petites fonctions (des variables globales ou des fonctions constantes). Comme {\Asak} ne prend pas en compte la valeur des littéraux, ces dernières sont toutes regroupées.
-\item Soit du code généré par des outils comme \verb|Coq|, \verb|Menhir|, \verb|AWS|...
-\end{itemize}
+Les classes comprenant plus de 50 éléments sont majoritairement de
+deux types. Il s'agit d'une part de très petites fonctions (des
+variables globales ou des fonctions constantes). Comme {\Asak} ne
+prend pas en compte la valeur des littéraux, ces dernières sont toutes
+regroupées. L'autre type de redondance est issu du code généré par des
+outils comme \verb|Coq|, \verb|Menhir|, \verb|AWS|...
+\yrg{Quand tu parles de code généré par AWS, je ne suis pas sûr de voir de quoi tu parles.}
 
-Cependant, certaines classes représentent de véritables possibilités de factorisation. Par exemple, nous trouvons une classe contenant $122$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}, que l'on trouve sous pas moins de $32$ noms différents. Cette classe capture aussi les fonctions similaires concernant les types isomorphes au type \iocaml{option}. Par exemple, cette classe contient la fonction \iocaml{map_evar_body} (provenant du module \iocaml{Evd} de \verb|Coq|):
+Cependant, certaines classes représentent de véritables possibilités
+de factorisation. Par exemple, nous trouvons une classe contenant
+$122$ éléments comprenant toutes les définitions de la (célèbre)
+fonction \iocaml{Option.map}, que l'on trouve sous pas moins de $32$
+noms différents. Cette classe capture aussi les fonctions similaires
+concernant les types isomorphes au type \iocaml{option}. Par exemple,
+cette classe contient la fonction \iocaml{map_evar_body} (provenant du
+module \iocaml{Evd} de \verb|Coq|):
 
-\begin{minted}{OCaml}
+\begin{ocaml}
 let map_evar_body f = function
   | Evar_empty -> Evar_empty
   | Evar_defined d -> Evar_defined (f d)
-\end{minted}
+\end{ocaml}
+
+Une synthèse complète de l'analyse des paquets~{\Opam} par~{\Asak} sera l'objet
+de travaux futurs.
