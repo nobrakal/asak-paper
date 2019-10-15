@@ -28,7 +28,7 @@ de lancement et rattrapage d'exceptions. L'appel de méthode est la
 construction qui nous rappelle qu'{\OCaml} est un aussi un langage à
 objets. Pour finir, $\LambdaCode$ n'a pas d'analyse de motifs mais est
 muni d'un branchement n-aire introduit par le mot-clé~\iocaml{switch}.
-
+%
 Par manque de place, nous ne donnons pas les règles de sémantique de
 ce langage et nous laissons au lecteur le soin de réfléchir à ces
 dernières. Par contre, pour se convaincre que l'on ne perd pas trop de
@@ -53,7 +53,7 @@ et discutée dans la section~\ref{sec:redundancy}.
 
 \paragraph{Absence de modules et de classes}
 Les constructions de seconde classe (comme les définitions de modules
-et de classes d'objets) ont disparu dans le programme traduit
+et de classes d'objets) ont disparu dans le programme traduit en
 {\LambdaCode}. Cela limite notre capacité à détecter des modules
 similaires ou des classes similaires. Comme pour les définitions de
 type, nous pensons qu'en nous focalisant uniquement sur les aspects
@@ -67,11 +67,11 @@ forme d'arbres de décision, exprimés à l'aide d'expressions
 conditionnelles et de branchements. Deux analyses de motifs distinctes
 syntaxiquement en {\OCaml} peuvent être envoyées vers le même arbre de
 décision et donc le même code~\LambdaCode: c'est par exemple le cas de deux
-analyses à~$3$ branches sur le type \iocaml{color = Red | Black |
+analyses à~trois branches sur le type \iocaml{color = Red | Black |
   White} car quelque soit l'ordre des branches de
 l'analyse\footnote{En supposant qu'il n'y a pas de clause
   \iocaml{when} en jeu.}, celles-ci vont être traduites vers des
-branchements à $3$ cas où l'ordre des cas correspond à l'ordre des
+branchements à trois cas où l'ordre des cas correspond à l'ordre des
 constructeurs de données dans la définition du type. Il s'agit donc
 encore une fois d'une simplification favorable des termes sources
 puisqu'elle envoie des termes sources syntaxiquement distincts mais

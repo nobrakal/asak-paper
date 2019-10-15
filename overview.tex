@@ -63,16 +63,16 @@ distincts sont absolument dissimilaires, i.e. elles n'ont rien en
 commun.
 
 Dans le cas de ce corpus, le regroupement des définitions~$1$ et~$2$
-est très naturel puisque ces deux définitions sont équivalentes à
+est naturel puisque ces deux définitions sont équivalentes à
 quelques détails purement textuels près : la présence du \iocaml{|},
 d'un retour à la ligne et d'un renommage. La définition~$3$ est proche
 de cette première classe: elle en diffère seulement à cause d'un cas
 d'analyse supplémentaire. Le regroupement des définitions~$4$ et~$5$
-est assez naturel puisqu'elles suivent la même (et bonne!) stratégie
+est assez naturel lui aussi puisqu'elles suivent la même (et bonne!) stratégie
 qui consiste à accumuler le résultat dans l'argument d'une fonction
 auxiliaire interne. Notons que ces deux définitions sont dissimilaires
 même si elles utilisent les mêmes ``ingrédients'' : la définition~$5$
-effectue une analyse par cas supplémentaire pour traiter le cas de la
+effectue une analyse par cas supplémentaire pour traiter la
 liste vide de façon spécifique.
 %% Les deux classes~$(1-2)-3$
 %% et~$4-5$ partagent le fait d'être des définitions récursives procédant par
@@ -87,7 +87,7 @@ liste vide de façon spécifique.
 %% petit les différences entre ses membres.
 
 \paragraph{Comment procède {\Asak}?}
-Ce partitionnement semble assez naturel mais comment
+Ce partitionnement semble pertinent mais comment
 notre outil l'a-t-il obtenu? Comme nous l'avons déjà écrit dans
 l'introduction, le traitement de notre outil se décompose
 essentiellement en trois étapes: (i) les programmes sources sont
@@ -100,11 +100,11 @@ s'appuie sur les empreintes.
 \paragraph{Comment les définitions sont-elles normalisées?}
 L'analyse syntaxique est la solution canonique pour éliminer les
 artefacts textuels et ne garder que la structure d'un code source.
-Notre outil travaille donc sur des arbres de syntaxe abstraits.  On
-pourrait opposer à ce choix de conception le fait que considérer le
-texte des programmes permettrait de séparer des programmes dont les
-arbres de syntaxe sont égaux. Cependant, un tel point de vue sépare
-trop de programmes.
+Notre outil travaille donc sur des arbres de syntaxe abstraits. %%  On
+%% pourrait opposer à ce choix de conception le fait que considérer le
+%% texte des programmes permettrait de séparer des programmes dont les
+%% arbres de syntaxe sont égaux. Cependant, un tel point de vue sépare
+%% trop de programmes.
 
 Une fois que l'on a décidé de travailler sur un langage d'arbres
 distincts de la syntaxe concrète, il faut choisir ce nouveau langage.
@@ -132,15 +132,14 @@ remarques similaires s'appliquent aux autres définitions.
 \paragraph{Pourquoi calcule-t-on des empreintes?}
 
 Comparer deux arbres en itérant sur leurs structures respectives a un
-coût proportionnel à leur taille. Par ailleurs, la notion de
-comparaison qui nous intéresse doit idéalement savoir comparer
-l'ensemble des sous-arbres des deux arbres pour déterminer quelle
-quantité de code ils ont en commun. L'ordre d'apparition des
-sous-arbres n'est donc pas forcément important : bien entendu, deux
-arbres utilisant les mêmes sous-arbres dans le même ordre seront très
-similaires mais utiliser les mêmes sous-arbres dans un ordre différent
-est aussi une forme de similarité non négligeable même si elle est un
-peu moins forte.
+coût proportionnel à leur taille. Par ailleurs, la classification qui
+nous intéresse doit idéalement savoir comparer l'ensemble des
+sous-arbres des deux arbres pour déterminer quelle quantité de code
+ils ont en commun. L'ordre d'apparition des sous-arbres n'est donc pas
+forcément important : bien entendu, deux arbres utilisant les mêmes
+sous-arbres dans le même ordre seront très similaires mais utiliser
+les mêmes sous-arbres dans un ordre différent est aussi une forme de
+similarité non négligeable même si elle est un peu moins forte.
 
 Après ces remarques, l'implémentation d'une fonction d'évaluation de
 la similarité entre deux termes $\LambdaCode$ semble difficile. Nous
@@ -196,7 +195,7 @@ définitions similaires sont petits par rapport au corpus et nous avons
 donc choisi un algorithme de partitionnement hiérarchique ascendant.
 
 L'algorithme procède donc en partant d'un partitionnement où chaque
-individu est dans une classe distincte de celles des autres et choisi
+individu est dans une classe distincte de celles des autres et choisit
 à chaque itération de fusionner les deux classes les moins
 dissimilaires. Nous définirons précisément la mesure de dissimilarité
 que nous utilisons dans la section~\ref{sec:clustering} mais pour
@@ -221,13 +220,13 @@ dans la figure~\ref{fig:clustering-jouet}.
 \[
 \begin{array}{rclr}
 \text{Étape 1} & \{ 1, 2 \}, \{ 3 \}, \{ 4 \}, \{ 5 \}, \{ 6 \}
-& \text{car }1 \text{ et } 2 \text{ont la même empreinte.} \\
+& \text{car }1 \text{ et } 2 \text{ ont la même empreinte.} \\
 \text{Étape 2} & \{ 1, 2 \}, \{ 3 \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
 & \text{car }4 \text{ et } 5 \text{ sont les plus proches.} \\
 \text{Étape 3} & \{ \{ 1, 2 \}, \{ 3 \} \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
 & \text{car }3 \text{ et } \{ 1, 2 \} \text{ sont les plus proches.} \\
 \text{Étape 4} & \{ \{ 1, 2 \}, \{ 3 \} \}, \{ \{ 4 \}, \{ 5 \} \}, \{ 6 \}
-& \text{car toutes les classes sont absolument dissimilaires.}
+& \text{ car toutes les classes sont absolument dissimilaires.}
 \end{array}
 \]
 
