@@ -2,28 +2,28 @@
 \paragraph{Motivation}
 Une centaine d'étudiants de troisième année suivent le cours de
 programmation fonctionnelle. Ils ont deux heures de travaux pratiques
-par semaine. Comment le professeur peut-il (humainement) analyser les
-réponses aux exercices de la semaine ?
+par semaine produisant donc plusieurs centaines de réponses. Comment
+l'enseignant peut-il efficacement analyser ces réponses pour
+comprendre les difficultés rencontrées par ses étudiants?
 
 L'utilisation de {\LearnOCaml}~\cite{learnocaml} est déjà d'une grande
 aide car la correction automatique des exercices permet de voir les
 pourcentages de réussite de chaque étudiant. Malheureusement cela ne
-suffit pas pour comprendre s'ils ont bien travaillé car environ 80\%
-des étudiants obtiennent tous les points ! Il s'agit maintenant de
-comprendre \emph{comment} les étudiants ont répondu; c'est-à-dire de
-comparer le code source qu'ils ont produits.
-
+suffit pas toujours car environ 80\% des étudiants obtiennent tous les
+points ! Une analyse plus poussée vise à déterminer \emph{comment} les
+étudiants ont répondu.
+%
 Nous avons donc intégré {\Asak} à {\LearnOCaml} afin de classifier les
 codes des étudiants. En observant les représentants des classes
-obtenues et leur taille, le professeur peut ainsi se faire une idée en
-très peu de temps de la façon dont les élève ont répondu, ainsi
-qu'identifier les élèves qui ont fournit une réponse tout à fait
-inattendue et nécessitent peut-être plus d'attention.
+obtenues et leur taille, l'enseignant peut se faire rapidement une
+idée de la façon dont les élève ont répondu et ainsi identifier les
+élèves qui ont fourni une réponse inattendue et qui nécessitent
+peut-être plus d'attention.
 
 \paragraph{Approche utilisée}
 Partant de l'hypothèse que les tests automatiques ont été bien écrits,
 nous classifions une première fois les codes selon la note qu'ils ont
-obtenu. En effet, nous ne voulons jamais identifier deux codes qui
+obtenue. En effet, nous ne voulons jamais identifier deux codes qui
 n'ont pas eu la même note, même s'ils sont similaires
 syntaxiquement. Cette première passe nous permet aussi d'avoir pour
 chaque classe une hypothèse, très forte, d'équivalence sémantique.
@@ -31,9 +31,6 @@ Cette hypothèse nous permet de raffiner la fonction de calcul
 d'empreinte afin d'identifier encore plus de codes.
 
 \paragraph{Amélioration de la fonction de calcul d'empreinte}
-La fonction de calcul d'empreinte capture la forme de l'arbre et
-quelques plusieurs autres informations qui peuvent ici être
-réinterprétées.
 
 %\paragraph{La combinaison des empreintes}
 Comme nous l'avons vu précédemment, la clé de hachage d'un
@@ -44,7 +41,7 @@ que par l'ordre de certains sous-termes ne sont pas envoyés vers la
 même empreinte. Pour résoudre ce problème, nous avons modifié notre
 fonction de prise d'empreintes pour qu'elle trie les empreintes des
 sous-termes avant de les combiner. Trier ou non les sous-empreintes
-est désormais un paramètre de~{\Asak}.
+est un paramètre global de~{\Asak}.
 
 %\paragraph{L'empreinte des feuilles}
 Nous avons déjà soulevé le problème du calcul des empreintes des
