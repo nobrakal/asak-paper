@@ -150,7 +150,7 @@ et de lui-même.
 Il reste maintenant à décider quelle fonction de hachage utiliser. Ne
 nous intéressant pas à des questions de sécurité, nous avons décidé
 d'utiliser intensivement la fonction de hachage cryptographique
-MD5. Pour chaque n{\oe}ud de l'arbres, on calcule une clé de hachage
+MD5. Pour chaque n{\oe}ud de l'arbre, on calcule une clé de hachage
 qui s'appuie sur le nom de la construction utilisée et, pour procéder
 incrémentalement~\cite{DBLP:conf/ml/FilliatreC06}, sur les clés de
 hachage des sous-arbres prise dans l'ordre, de gauche à droite.
@@ -187,23 +187,22 @@ valeurs dans le calcul de la clé de hachage.
 %% dernier identificateur est une approximation trop grossière de
 %% la sémantique.
 
-pour finir cette section, il faut remarquer qu'il n'est pas pertinent
+Pour finir cette section, il faut remarquer qu'il n'est pas pertinent
 de garder tous les glyphes des sous-termes dans l'empreinte finale.
-En effet, nous avons vu que la fonction de clustering utilise le
-multi-ensemble des empreintes des sous-arbres pour identifier les
+En effet, nous avons vu que la fonction de partitionnement utilise le
+multi-ensemble des glyphes des sous-arbres pour identifier les
 codes "proches". Comme nous travaillons en s'abstrayant les constantes
 (c'est-à-dire que toutes les constantes ont le même glyphe), presque
-tous les arbres partagent ces empreintes. Nous ne pouvons donc pas
+tous les arbres partagent ces glyphes. Nous ne pouvons donc pas
 conserver les empreintes de tous les sous-arbres.
 %
 Une approche consiste à ne conserver que les empreintes des "gros"
 sous-arbres, afin d'éviter la pollution induite par les empreintes des
-feuilles. La définition même de "gros" étant sujette à cautions, nous proposons deux possibilités:
-\begin{itemize}
-\item ne retenir que les empreintes des
-sous-arbres ayant au moins un certain pourcentage~$p$ de nœuds comparé au nombre de nœuds de l'arbre tout entier (utile quand on ne connait pas à-priori la taille des définitions étudiées).
-\item ne retenir que les empreintes des
-sous-arbres ayant un nombre~$n$ de nœuds (utile quand on ne s'intéresse qu'aux fonctions dont on connait la taille).
-\end{itemize}
-
-Il s'agit d'un paramètre global de~{\Asak}.
+feuilles. La définition même de "gros" étant sujette à cautions, nous
+proposons deux possibilités: (i) ne retenir que les empreintes des
+sous-arbres ayant au moins un certain pourcentage~$p$ de nœuds comparé
+au nombre de nœuds de l'arbre tout entier (utile quand on ne connait
+pas à-priori la taille des définitions étudiées) ; ou bien (ii) ne
+retenir que les empreintes des sous-arbres ayant un nombre~$n$ de
+nœuds (utile quand on ne s'intéresse qu'aux fonctions dont on connait
+la taille). Il s'agit d'un paramètre global de~{\Asak}.
