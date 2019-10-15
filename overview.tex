@@ -1,65 +1,19 @@
 Dans cette section, nous décrivons l'architecture de notre outil sur
-un corpus d'exemple. Nous justifions nos choix de conception par la
+un corpus d'exemple. Nous expliquons nos choix de conception par la
 même occasion.
 
-\yrg{Il faut dire à un moyen que l'on compare les définitions deux à deux
-et non pas tous les sous-termes deux à deux.}
+\input{revs}
 
 \paragraph{Que produit {\Asak}?}
-La figure~\ref{fig:example:sources} contient les cinq
-exemples de définitions {\OCaml} qui forment un corpus jouet
-qui va nous servir à illustrer le fonctionnement d'{\Asak}.
-Le lecteur aura reconnu d'un coup d'{\oe}il la fonction classique qui
-renvoie la liste mirroir d'une liste prise en argument et l'enseignant
-aura reconnnu des réponses typiques d'étudiants apprenti-programmeurs
-fonctionnels.
+{\Asak} cherche à comparer entre elles des définitions globales.  La
+figure~\ref{fig:example:sources} contient cinq exemples de telles
+définitions {\OCaml}. Elles forment un corpus jouet qui va nous servir
+à illustrer le fonctionnement d'{\Asak}.  Le lecteur aura reconnu d'un
+coup d'{\oe}il la fonction classique qui renvoie la liste mirroir
+d'une liste prise en argument et l'enseignant aura reconnnu des
+réponses typiques d'étudiants apprenti-programmeurs fonctionnels.
 
-\begin{figure}
-\begin{multicols}{2}
-\begin{ocaml}
-(* Code 1 *)
-let rec rev l = match l with
-    [] -> []
-  |t::q -> rev q@[t]
-
-(* Code 2 *)
-let rec rev l =
-  match l with
-  | [] -> []
-  | a::t -> (rev t)@[a]
-
-(* Code 3 *)
-let rec rev l = match l with
-    [] | [_] -> l
-  | t::q -> rev q@[t];;
-\end{ocaml}
-\begin{ocaml}
-(* Code 4 *)
-let rev l=
-  let rec rev_aux acc l=
-    match l with
-    |[]->acc
-    |t::q->rev_aux (t::acc) q
-  in rev_aux [] l
-
-(* Code 5 *)
-let rev l =
-  match l with
-    [] -> []
-  |a::q -> let rec rev2 x y = match y with
-        [] -> x
-      |b::z -> rev2 (b::x) z in rev2 [] l
-
-(* Code 6 *)
-let rev l =
-  List.fold_left (fun acc x -> x :: acc) [] l
-\end{ocaml}
-\end{multicols}
-\label{fig:example:sources}
-\caption{Un corpus jouet pour illustrer notre algorithme.}
-\end{figure}
-
-Sur ce corpus, notre outil produit le dendrogramme suivant~:
+Sur ce corpus, notre outil produit l'ensemble de dendrogrammes suivants~:
 
 \begin{center}
 \begin{tikzpicture}[sloped, scale=0.5]
@@ -71,24 +25,24 @@ Sur ce corpus, notre outil produit le dendrogramme suivant~:
 \node (d) at (-2,0) {4};
 \node (e) at (-1,0) {5};
 \node (de) at (-1.5,2) {};
-\node (abcde) at (-3.5, 3) {};
+% \node (abcde) at (-3.5, 3) {};
 \node (f) at (0,0) {6};
-\node (all) at (-1, 4) {};
-\node (root) at (-1,5) {};
+%\node (all) at (-1, 4) {};
+%\node (root) at (-1,5) {};
 
 \draw  (a) |- (ab.center);
 \draw  (b) |- (ab.center);
 \draw  (ab) |- (abc.center);
 \draw  (c)  |- (abc.center);
-\draw  (abc) |- (abcde.center);
-\draw  (de)  |- (abcde.center);
+%\draw  (abc) |- (abcde.center);
+%\draw  (de)  |- (abcde.center);
 \draw  (d)  |- (de.center);
 \draw  (e)  |- (de.center);
 
-\draw  (abcde) |- (all.center);
-\draw  (f)     |- (all.center);
+%\draw  (abcde) |- (all.center);
+%\draw  (f)     |- (all.center);
 
-\draw (all)      |- (root.center);
+%\draw (all)      |- (root.center);
 
 \draw[->,-triangle 60] (-7,0) -- node[above]{dissimilarité} (-7,6);
 \end{tikzpicture}
@@ -113,23 +67,24 @@ de cette première classe: elle en diffère seulement à cause d'un cas
 d'analyse supplémentaire. Le regroupement des définitions~$4$ et~$5$
 est assez naturel puisqu'elles suivent la même (et bonne!) stratégie
 qui consiste à accumuler le résultat dans l'argument d'une fonction
-auxiliaire interne. Notons que ces deux définitions ne sont pas
-syntaxiquement équivalentes même si elles utilisent les mêmes ``ingrédients'' :
-la définition~$5$ effectue une analyse par cas supplémentaire pour
-traiter le cas de la liste vide de façon spécifique. Les deux classes~$(1-2)-3$
-et~$4-5$ partagent le fait d'être des définitions récursives procédant par
-analyse de cas : ces individus sont clairement séparés de la définition~$6$
-qui s'appuie sur une spécialisation de la fonction~\iocaml{List.fold_left}.
+auxiliaire interne. Notons que ces deux définitions sont dissimilaires
+même si elles utilisent les mêmes ``ingrédients'' : la définition~$5$
+effectue une analyse par cas supplémentaire pour traiter le cas de la
+liste vide de façon spécifique.
+%% Les deux classes~$(1-2)-3$
+%% et~$4-5$ partagent le fait d'être des définitions récursives procédant par
+%% analyse de cas : ces individus sont clairement séparés de la définition~$6$
+%% qui s'appuie sur une spécialisation de la fonction~\iocaml{List.fold_left}.
 
-L'intérêt d'une classification hiérarchique est surtout visible sur de
-grands corpus : les quelques classes les plus proches de la racine du
-dendrogramme sont les principales classes de définitions similaires
--- celles qui partagent au moins un sous-terme -- et c'est
-en observant chaque classe en profondeur que l'on raffine petit à
-petit les différences entre ses membres.
+%% L'intérêt d'une classification hiérarchique est surtout visible sur de
+%% grands corpus : les quelques classes les plus proches de la racine du
+%% dendrogramme sont les principales classes de définitions similaires
+%% -- celles qui partagent au moins un sous-terme -- et c'est
+%% en observant chaque classe en profondeur que l'on raffine petit à
+%% petit les différences entre ses membres.
 
 \paragraph{Comment procède {\Asak}?}
-Ce partitionnement semble donc somme toute assez naturel mais comment
+Ce partitionnement semble assez naturel mais comment
 notre outil l'a-t-il obtenu? Comme nous l'avons déjà écrit dans
 l'introduction, le traitement de notre outil se décompose
 essentiellement en trois étapes: (i) les programmes sources sont
@@ -138,7 +93,6 @@ inessentiels ; (ii) on calcule une empreinte pour caractériser la
 structure et les ingrédients principaux des programmes normalisés ;
 (iii) on applique un algorithme de partitionnement hiérarchique qui
 s'appuie sur les empreintes.
-\yrg{Rajouter une figure?}
 
 \paragraph{Comment les définitions sont-elles normalisées?}
 L'analyse syntaxique est la solution canonique pour éliminer les

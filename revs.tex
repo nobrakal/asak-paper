@@ -1,0 +1,44 @@
+\begin{figure}
+\begin{multicols}{2}
+\begin{ocaml}
+(* Code 1 *)
+let rec rev l = match l with
+    [] -> []
+  |t::q -> rev q@[t]
+
+(* Code 2 *)
+let rec rev l =
+  match l with
+  | [] -> []
+  | a::t -> (rev t)@[a]
+
+(* Code 3 *)
+let rec rev l = match l with
+    [] | [_] -> l
+  | t::q -> rev q@[t];;
+\end{ocaml}
+\begin{ocaml}
+(* Code 4 *)
+let rev l=
+  let rec rev_aux acc l=
+    match l with
+    |[]->acc
+    |t::q->rev_aux (t::acc) q
+  in rev_aux [] l
+
+(* Code 5 *)
+let rev l =
+  match l with
+    [] -> []
+  |a::q -> let rec rev2 x y = match y with
+        [] -> x
+      |b::z -> rev2 (b::x) z in rev2 [] l
+
+(* Code 6 *)
+let rev l =
+  List.fold_left (fun acc x -> x :: acc) [] l
+\end{ocaml}
+\end{multicols}
+\label{fig:example:sources}
+\caption{Un corpus jouet pour illustrer notre algorithme.}
+\end{figure}
