@@ -55,11 +55,13 @@ produire un dendrogramme par classe.
 
 \begin{ocaml}
 (* Types pour les classes d'empreintes et les partionnements. *)
-type cluster and clustering = cluster list
+type cluster and clustering
 (* L'opération de fusion. *)
 val merge : cluster -> cluster -> clustering -> clustering
-(* Une classe avec une unique empreinte. *)
-val singleton : fingerprint -> cluster
+(* Un partitionnement initial avec une empreinte par classe. *)
+val initial : fingerprint list -> clustering
+(* Le nombre de classes d'un partitionnement. *)
+val size : clustering -> int
 \end{ocaml}
 
 Il faut étendre la notion de dissimilarité aux paires de classes.
@@ -90,15 +92,14 @@ L'algorithme de partitionnement hiérarchique est donné par le programme {\OCam
 
 \begin{ocaml}
 (* Renvoie une liste de classes deux à deux infiniment dissimilaires. *)
-let rec run_clustering xs =
-  match xs with
-  | [] | [_] -> xs
-  | _ -> match get_closest_with_d xs with
-         | (Infinity, _) -> xs
-         | (Regular p, (u, v)) -> run_clustering (merge u v xs)
+let rec make_clustering xs =
+  if size xs <= 1 then xs
+  else match get_closest_with_d xs with
+   | (Infinity, _) -> xs
+   | (Regular p, (u, v)) -> make_clustering (merge u v xs)
 
-let make_clusters : fingerprint list -> cluster list = fun fs ->
-  run_clustering @@ List.map singleton fs
+let clustering : fingerprint list -> clustering = fun fs ->
+  make_clustering @@ initial fs
 \end{ocaml}
 
 Cette formulation de l'algorithme est malheureusement trop naïve pour
@@ -107,5 +108,37 @@ cet algorithme est cubique en fonction de la longueur de la
 liste~\iocaml{fs}, c'est-à-dire du nombre de définitions du
 corpus et dans nos cas d'usage, ce nombre de l'ordre de~$10^6$.
 
-\yrg{Faire le point avec Alexandre sur les optimisations :
-  surapproximation et parallélisme, c'est tout?}
+Heureusement, il est possible d'en fournir une version optimisée
+(restant de complexité cubique néanmoins). Cette optimisation
+s'appuie sur les quatre ingrédients suivants :
+
+\begin{enumerate}
+\item
+  On commence par séparer les empreintes en deux ensembles : celles
+  qui infiniment dissimilaires des autres, et celles qui ne le sont
+  pas. Cette phase permet d'éliminer les définitions qui ne partagent
+  absolument rien avec les autres, et sont donc exclues de toute
+  forme de redondance. Cette passe a un coût quadratique en le
+  nombre~$D$ d'empreintes.
+\item
+  Les dissimilarités inter-empreintes peuvent être précalculées une
+  fois pour toute pour un coût quadratique en le nombre~$D$
+  d'empreintes.  Ce précalcul, qui est effectué en parallèle sur
+  plusieurs c{\oe}urs, permet de répondre en temps logarithmique
+  \yrg{Pourquoi pas constant en copiant tout dans une matrice?}
+  la valeur de $d(X, Y)$.
+\item
+  On calcule ensuite une surapproximation du partionnement : à l'aide
+  d'une structure de type \textit{Union-Find}, on regroupe les
+  empreintes qui ont une dissimilarité relative finie. On sépare ainsi
+  les empreintes qui ne pourront jamais être dans la même classe car
+  elles sont infiniment dissimilaires deux-à-deux. Ce calcul a un coût
+  en $O(D^2 \cdot log D \cdot \alpha(D))$. \yrg{Ici, on pourrait
+    enlever le log si ma remarque précédente a du sens.}
+\item
+  Pour finir, l'algorithme de partitionnement naïf est exécuté en
+  parallèle sur toutes les classes du partionnement sur-approximé.
+  Cette étape a un coût cubique en la taille de chaque partition, ce
+  qui réduit significativement le temps d'exécution de l'algorithme.
+
+\end{enumerate}
