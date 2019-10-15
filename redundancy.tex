@@ -47,16 +47,16 @@ pu être installés pour les raisons suivantes :
 
 \paragraph{Aspects quantitatifs}
 
-Sur ces $1250$ paquets, nous avons extrait $356 703$ définitions
+Sur ces $1250$ paquets, nous avons extrait $360152$ définitions
 strictement différentes. On a retiré de ce décompte les définitions
 provenant de deux versions différentes d'une même paquet et qui
 produisent la même empreinte.
 
 En ne conservant que les empreintes des arbres de plus de~$30$ nœuds
 (limite calculable en temps raisonnable de notre implémentation), ces
-définitions ont été classées en $168 307$ classes, dont $36 640$ avec
+définitions ont été classées en $198841$ classes, dont $40935$ avec
 strictement plus d'un élément (c'est-à-dire que nous avons identifié
-au moins $36 640$ doublons). Le tout a été calculé en $20$ minutes sur
+au moins $40935$ doublons). Le tout a été calculé en $40$ minutes sur
 la machine décrite dans la section précédente.
 
 Donner les histogrammes, la moyenne, l'écart-type pour les
@@ -67,10 +67,19 @@ informations suivantes :
 
 \paragraph{Aspects qualitatifs}
 
-- Analyse des classes les plus grandes
+Les classes comprenant plus de 50 éléments sont majoritairement:
+\begin{itemize}
+\item Soit des très petites fonctions (des variables globales ou des fonctions constantes).
+\item Soit du code généré par des outils comme \verb|Coq|, \verb|Menhir|, \verb|AWS|...
+\end{itemize}
 
-- Recherche des principales fonctions répétées : y inclure la discussion autour de Option.map
-  et de sa version ``isomorphe''.
+Cependant, certaines classes représentent de véritables possibilités de factorisations. Par exemple, nous trouvons une classe contenant $134$ éléments comprenant toutes les définitions de la (célèbre) fonction \iocaml{Option.map}. Cette classe capture aussi les fonctions similaires concernant les types isomophes au type \iocaml{option}. Par exemple, cette classe contient la fonction (provenant du module \iocaml{Evd} de \verb|Coq|):
+
+\begin{minted}{OCaml}
+let map_evar_body f = function
+  | Evar_empty -> Evar_empty
+  | Evar_defined d -> Evar_defined (f d)
+\end{minted}
 
 - les paquets qui ont le plus de redondance interne
 
