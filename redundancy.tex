@@ -18,7 +18,7 @@ compilateur. Il serait difficile d'automatiser cette configuration à
 partir du contenu des paquets. Nous avons préféré créer une version
 personnalisée du compilateur~{\OCaml}~\cite{custom-ocaml} installable
 dans \textit{switch} {\Opam}.
-
+%
 Le compilateur modifié instrumente la compilation standard par un
 mécanisme de normalisation et d'exportation des termes~{\LambdaCode}.
 Le dossier contenant le fichier source permet au compilateur de connaître le
@@ -26,24 +26,21 @@ paquet~{\Opam} en cours d'installation. Chaque terme collecté peut
 ainsi être étiqueté par le nom du paquet~\Opam, par le nom du fichier
 source et par le chemin du module de la définition dont il est issu.
 
-À l'aide d'un serveur de calcul possédant 40 processeurs Intel(R)
-Xeon(R) CPU E5-4640 v2 cadencé à 2.20GHz équipé de 756Go de RAM, nous
-avons ensuite parallélisé les (tentatives d')installations de
-l'ensemble des paquets~\Opam. Au bout de~$20$ heures, nous avons
-obtenu un corpus de travail dont nous décrivons l'analyse avec~{\Asak} dans
-la section suivante.
+À l'aide d'un serveur de calcul~\footnote{Une machine possédant 40
+processeurs Intel(R) Xeon(R) CPU E5-4640 v2 cadencé à 2.20GHz équipé
+de 756Go de RAM.}, nous avons ensuite parallélisé les (tentatives
+d')installations de l'ensemble des paquets~\Opam. Au bout de~$20$
+heures, nous avons obtenu un corpus de travail dont nous décrivons
+l'analyse avec~{\Asak} dans la section suivante.
 
 \subsection{Analyse des résultats}
 
 Nous avons réussi à compiler $1250$ paquets sur les $2428$ paquets que
 compte à ce jour le dépôt {\Opam} officiel. Tous les paquets n'ont pas
-pu être installés pour les raisons suivantes :
-
-\begin{itemize}
-\item Certains paquets ne compilent pas avec {\OCaml} 4.08.1.
-\item Certains paquets sont en conflit avec {\OCaml} 4.08.1.
-\item Certains paquets dépendent de bibliothèques C non-installées.
-\end{itemize}
+pu être installés car
+certains paquets ne compilent pas avec {\OCaml} 4.08.1 ou
+sont en conflit avec {\OCaml} 4.08.1, ou bien encore parce que
+certains paquets dépendent de bibliothèques C non-installées.
 
 \paragraph{Aspects quantitatifs}
 

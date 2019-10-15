@@ -8,8 +8,7 @@ ressemblent même si leurs structures respectives diffèrent
 plus significativement. Considérons par exemple:
 
 \begin{ocaml}
-let id1 x = print_endline "debug"; x
-let id2 x = x
+let id1 x = print_endline "debug"; x and id2 x = x
 \end{ocaml}
 \noindent \iocaml{id1} et \iocaml{id2} n'ont pas le même glyphe mais
 on peut difficilement ignorer leur ressemblance!
@@ -21,13 +20,10 @@ de dissimilarité pour fonctionner.
 \begin{defn}
 Soient $X$ et $Y$ deux empreintes. La \textit{dissimilarité} $d(X, Y)$ entre~$X$ et~$Y$
 est une valeur de $\mathbb{N} \cup \{ \infty \}$ définie comme suit:
-\begin{align*}
-d (X,Y) &=
-\begin{cases}
-	\infty & \text{si $X \cap Y = \emptyset$} \\
-	\sum\limits_{g \in X \Delta Y} w(g) & \text{sinon}
-\end{cases}
-\end{align*}
+\[
+d (X,Y) = \sum\limits_{g \in X \Delta Y} w(g) \text{ ou }
+	  \infty \text{ si $X \cap Y = \emptyset$} \\
+\]
 \noindent où $X \Delta Y$ est la différence symétrique entre deux multi-ensembles~$X$ et~$Y$.
 \end{defn}
 
@@ -80,7 +76,6 @@ les deux classes les plus proches dans le partitionnement courant:
 
 \begin{ocaml}
 type dissimilarity = Regular of int | Infinity
-
 (* Renvoie les deux clusters les plus proches selon d, ainsi que leur distance *)
 val get_closest_with_d : clustering -> (dissimilarity * (cluster * cluster))
 \end{ocaml}
@@ -90,13 +85,10 @@ L'algorithme de partitionnement hiérarchique est donné par le programme {\OCam
 \begin{ocaml}
 (* Renvoie une liste de classes deux à deux infiniment dissimilaires. *)
 let rec make_clustering xs =
-  if size xs <= 1 then xs
-  else match get_closest_with_d xs with
+  if size xs <= 1 then xs else match get_closest_with_d xs with
    | (Infinity, _) -> xs
    | (Regular p, (u, v)) -> make_clustering (merge u v xs)
-
-let clustering : fingerprint list -> clustering = fun fs ->
-  make_clustering @@ initial fs
+let clustering fs = make_clustering @@ initial fs
 \end{ocaml}
 
 Cette formulation de l'algorithme est malheureusement trop naïve pour
@@ -107,7 +99,7 @@ corpus et dans nos cas d'usage, ce nombre de l'ordre de~$10^6$.
 
 Heureusement, il est possible d'en fournir une version optimisée
 (restant de complexité cubique néanmoins). Cette optimisation
-s'appuie sur les quatre ingrédients suivants :
+s'appuie sur les quatre étapes suivants :
 
 \begin{enumerate}
 \item

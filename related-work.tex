@@ -1,0 +1,39 @@
+La comparaison de code est un sujet énormément étudié.  Différentes
+analyses détaillées des techniques existantes ont déjà été faites par
+Roy et al. \cite{ComparisonAndEvaluation} et Gautam et
+al. \cite{variousCodeClone}.  On peut grouper les différentes
+approches en quatre grandes familles qui utilisent chacune plus ou
+moins la sémantique du langage dans lequel le code est écrit.
+
+\paragraph{Approche textuelle}
+Il s'agit ici de comparer directement les chaines de caractères
+composant le code, avec le plus souvent un pré-traitement visant à
+supprimer les espaces inutiles et les commentaires. Cette approche est
+la seule indépendante du langage (à l'exception de la phase de
+pré-traitement). Elle a été mise en œuvre dans des outils comme Duploc
+\cite{ALanguageIndependent}.
+
+\paragraph{Approche lexicale}
+D'autre outils choisissent de travailler sur la séquence de tokens
+correspondant au code. Ces outils deviennent donc dépendant d'un
+langage mais permettent de résoudre certains problèmes de l'approche
+purement textuelle (on est par exemple capable d'identifier deux codes
+égaux à $\alpha$-renommage près).  Cette méthode est implémentée dans
+des outils comme CC-Finder \cite{ccfinder}, CP-Miner \cite{cpminer} et
+DUP \cite{dup}.
+
+\paragraph{Approche syntaxique}
+Une autre approche est d'utiliser directement l'arbre de syntaxe
+abstrait correspondant au code. Elle est donc dépendante du langage et
+permet de résoudre certains problèmes de l'approche lexicale. Cette
+méthode a été popularisée avec CloneDr \cite{CloneDetectionUsingAST}
+et utilisée plus récemment par Deckard \cite{Deckard}.
+
+\paragraph{Approche sémantique}
+Enfin, on peut aussi utiliser les graphes de dépendance
+\cite{PdgOrigin} du programme. Ces derniers permettent d'introduire
+beaucoup de sémantique dans la détection de clone mais la technique
+repose sur la recherche de sous-graphes identiques maximaux, problème
+qui est NP-complet. Des approximations en temps polynomial permettent
+néanmoins d'obtenir de bons résultats, comme l'a montré Krinke
+\cite{PDG}.

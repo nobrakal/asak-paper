@@ -1,6 +1,5 @@
 %!TEX root = root.tex
-
-\subsection{Motivation}
+\paragraph{Motivation}
 Une centaine d'étudiants de troisième année suivent le cours de
 programmation fonctionnelle. Ils ont deux heures de travaux pratiques
 par semaine. Comment le professeur peut-il (humainement) analyser les
@@ -21,7 +20,7 @@ très peu de temps de la façon dont les élève ont répondu, ainsi
 qu'identifier les élèves qui ont fournit une réponse tout à fait
 inattendue et nécessitent peut-être plus d'attention.
 
-\subsection{Approche utilisée}
+\paragraph{Approche utilisée}
 Partant de l'hypothèse que les tests automatiques ont été bien écrits,
 nous classifions une première fois les codes selon la note qu'ils ont
 obtenu. En effet, nous ne voulons jamais identifier deux codes qui
@@ -31,12 +30,12 @@ chaque classe une hypothèse, très forte, d'équivalence sémantique.
 Cette hypothèse nous permet de raffiner la fonction de calcul
 d'empreinte afin d'identifier encore plus de codes.
 
-\subsection{Amélioration de la fonction de calcul d'empreinte}
+\paragraph{Amélioration de la fonction de calcul d'empreinte}
 La fonction de calcul d'empreinte capture la forme de l'arbre et
 quelques plusieurs autres informations qui peuvent ici être
 réinterprétées.
 
-\paragraph{La combinaison des empreintes}
+%\paragraph{La combinaison des empreintes}
 Comme nous l'avons vu précédemment, la clé de hachage d'un
 terme~$\LambdaCode$ est déduite des clés de hachage de ses sous-termes
 \textit{combinées dans l'ordre, de gauche à droite}. Dans cette
@@ -47,7 +46,7 @@ fonction de prise d'empreintes pour qu'elle trie les empreintes des
 sous-termes avant de les combiner. Trier ou non les sous-empreintes
 est désormais un paramètre de~{\Asak}.
 
-\paragraph{L'empreinte des feuilles}
+%\paragraph{L'empreinte des feuilles}
 Nous avons déjà soulevé le problème du calcul des empreintes des
 feuilles de l'arbre en section~\ref{sec:fingerprint}. Dans ce contexte
 d'équivalence sémantique, nous pouvons supposer que dans deux arbres
@@ -57,24 +56,21 @@ identifiants, les deux codes n'auraient pas la même sémantique.  Nous
 avons donc choisi d'associer la même empreinte à tous les
 identifiants. \yrg{C'est vraiment violent!} \am{Oui, mais ça n'est pas un problème ! Les codes sont vraiment très semblables.}
 
-\subsection{Résultats}
+\paragraph{Résultats}
 
 Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus
 gros: celui des réponses des étudiants de troisième année à la
 question "Implémentez la fonction~\iocaml{rev}". $154$~réponses ont
 obtenu tous les points. Sur ce corpus, {\Asak} produit $9$~classes
 dont voici les cardinaux et une description succinte:
-
-\begin{itemize}
-\item $95$: le premier élément est mis à la fin du reste de la liste renversée récursivement.
-\item $41$: la réponse introduit une fonction auxiliaire récursive terminale.
-\item $5$ : la réponse utilise une fonction auxiliaire non-locale.
-\item $4$ : la réponse stocke le résultat de l'appel récursif dans une variable locale et ajoute le premier élément à la fin.
-\item $3$ : la réponse utilise~\iocaml{List.rev}.
-\item $3$ : la réponse s'appuie sur~\iocaml{List.fold_left}.
-\item $2$ : la réponse s'appuie sur~\iocaml{List.fold_right}.
-\item $1$ : la réponse utilise un \iocaml{if-then-else} au lieu du filtrage par motifs.
-\end{itemize}
+$95$ fois le premier élément est mis à la fin du reste de la liste renversée récursivement ;
+$41$ fois la réponse introduit une fonction auxiliaire récursive terminale ;
+$5$ fois la réponse utilise une fonction auxiliaire non-locale ;
+$4$ fois le résultat de l'appel récursif dans une variable locale et ajoute le premier élément à la fin ;
+$3$ fois la réponse utilise~\iocaml{List.rev};
+$3$ fois la réponse s'appuie sur~\iocaml{List.fold_left} ;
+$2$ fois la réponse s'appuie sur~\iocaml{List.fold_right} ;
+$1$ : la réponse utilise un \iocaml{if-then-else} au lieu du filtrage par motifs.
 
 L'enseignant peut déduire plusieurs choses de ce rapport. D'abord que
 la plupart des étudiants n'ont pas encore acquis le réflexe d'écrire
