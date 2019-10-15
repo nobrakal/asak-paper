@@ -47,6 +47,8 @@ tel partitionnement serait un outil précieux car il lui permettrait de
 différencier sa pédagogie en fonction des groupes de réponses fausses
 les plus courantes.
 
+\medskip
+
 Pour répondre à ces trois cas d'usage, il faudrait tout d'abord que
 l'on sache évaluer la ``similarité'' entre deux fragments de
 code. Mais qu'entend-on exactement par similarité? Peut-on
@@ -84,7 +86,7 @@ exemple canonique de tels détails syntaxiques anodins. Plus
 généralement, toute transformation locale et purement syntaxique,
 i.e. toute élimination de sucre syntaxique, semble aussi rentrer dans
 cette catégorie des ``détails syntaxiques''. Où s'arrêter dans ce
-processus de simplification des termes? Devrait-on par exemple aller
+processus de simplification des termes sources? Devrait-on par exemple aller
 jusqu'à comparer les codes machines obtenus par compilation des termes
 sources? Cette démarche conduirait sans doute à un échec puisque le
 jeu de la sélection d'instructions et des différentes optimisations
@@ -104,8 +106,8 @@ calculatoires principaux. Nous analyserons les avantages
 limitations (section~\ref{sec:limitations}) de ce choix de conception.
 
 Comme son nom l'indique, {\LambdaCode} est un $\lambda$-calcul
-(légèrement étendu). Nous nous sommes donc moralement ramené au
-problème de la construction d'une mesure de dissimilarité syntaxique
+(étendu). Nous nous sommes donc moralement ramené au
+problème de la construction d'une mesure de similarité syntaxique
 entre deux termes du $\lambda$-calcul. En utilisant une représentation
 de De Bruijn et en effectuant quelques réductions inoffensives, on
 gomme effectivement de cette façon certaines différences sans intérêt
@@ -120,11 +122,12 @@ l'appliquer sur des $\lambda$-termes.  La définition de ce
 prétraitement sur des $\lambda$-termes est donc la seconde
 contribution présentée par cet article.
 
-À ce stade, on peut donc mesurer la dissimilarité entre chaque paire de termes d'un corpus. L'ensemble de ces mesures
-constitue une grande quantité d'information peu structurée
-difficilement exploitable directement, en tout cas pour nos cas
-d'usage. Pour pallier à ce problème, nous proposons de partitionner hiérarchiquement
-les termes en s'appuyant sur leur mesure de dissimilarité
+À ce stade, on peut donc mesurer la similarité entre chaque paire de
+termes d'un corpus. L'ensemble de ces mesures constitue une grande
+quantité d'information peu structurée difficilement exploitable
+directement, en tout cas pour nos cas d'usage. Pour pallier à ce
+problème, nous proposons de partitionner hiérarchiquement les termes
+en s'appuyant sur leur mesure de dissimilarité
 (section~\ref{sec:clustering}). Encore une fois, notre contribution
 consiste à raffiner un algorithme déjà présent dans la littérature, la
 classification ascendante hiérarchique. Cette classification produit
