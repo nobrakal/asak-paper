@@ -4,6 +4,7 @@ PDFLATEX = pdflatex -shell-escape
 BIBTEX = bibtex
 
 all:
+	ocaml hash.ml > hash-corpus.tex
 	$(PDFLATEX) root
 
 final:

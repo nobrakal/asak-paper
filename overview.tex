@@ -167,12 +167,18 @@ E(\iocaml{g}) &=& \{ H(\iocaml{e2; e1}), H(\iocaml{e1}), H(\iocaml{e2}) \}
 Ces deux empreintes sont distinctes mais partagent deux clés de
 hachage. Ce partage témoigne du fait qu'elles ``utilisent les mêmes
 ingrédients''. Les empreintes calculées pour les définitions de notre
-corpus jouet se trouvent dans la figure~\ref{fig:hash}. Nous décrivons
-la définition précise de cette prise d'empreintes dans la
+corpus jouet se trouvent dans la figure~\ref{fig:hash}. On distingue
+la liste numérotée des clés de hachage dans la partie haute de la figure.
+En bas de la figure, on trouve les empreintes des définitions, ce sont
+des multi-ensembles de paires d'entiers. Dans cette figure, l'entier
+du haut est le numéro de clé de hachage et l'entier du  bas est le
+nombre de n{\oe}uds de l'arbre de syntaxe du sous-terme haché.
+%
+Nous donnons la définition précise de cette prise d'empreintes dans la
 section~\ref{sec:hash}.
 
 \begin{figure}
-TODO
+{\tiny\input{hash-corpus}}
 \caption{Les empreintes des définitions de notre corpus jouet.}
 \label{fig:hash}
 \end{figure}
