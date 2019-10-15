@@ -1,11 +1,11 @@
 %!TEX root = root.tex
 
-Dans cette section, nous formalisons la prise d'empreintes des
-définitions. Dans la section~\ref{sec:lambda}, nous donnons la syntaxe
-du langage~$\LambdaCode$ ainsi que les deux normalisations que nous
-appliquons à ses termes. Dans la section~\ref{sec:fingerprint},
-nous donnons la définition précise de notre fonction de prise
-d'empreintes.
+%% Dans cette section, nous formalisons la prise d'empreintes des
+%% définitions. Dans la section~\ref{sec:lambda}, nous donnons la syntaxe
+%% du langage~$\LambdaCode$ ainsi que les deux normalisations que nous
+%% appliquons à ses termes. Dans la section~\ref{sec:fingerprint},
+%% nous donnons la définition précise de notre fonction de prise
+%% d'empreintes.
 
 \subsection{$\LambdaCode$ normalisé}
 \label{sec:lambda}
@@ -142,8 +142,8 @@ arbre à travers une fonction de hachage~$f$ donnée. Pour un glype~$g$
 donné, on note son poids~$w(g)$ et sa clé de hachage~$h(g)$.
 \end{defn}
 
-La définition des empreintes se dérive à partir de cette notion de glyphe
-comme suit.
+%% La définition des empreintes se dérive à partir de cette notion de glyphe
+%% comme suit.
 
 \begin{defn}
 On appelle \textit{$f$-empreinte d'un arbre de syntaxe}~$t$, le
@@ -166,7 +166,32 @@ Pour que la valeur exacte des litéraux n'influence pas notre recherche
 de redondance, nous avons donc décidé de ne pas prendre en compte leurs
 valeurs dans le calcul de la clé de hachage.
 
-Pour finir cette section, il faut remarquer qu'il n'est pas pertinent
+%% Je garde ceci en commentaire car je ne suis pas sûr qu'il faille
+%% le supprimer.
+%%
+%% Il y a un cas particulier où {\Asak} n'ignore pas la valeur d'un
+%% litéral : lorsqu'un litéral est pris en argument de la primitive
+%% \iocaml{GetField} sa valeur est prise en compte dans le calcul de la
+%% clé de hachage. Pour comprendre ce qui motive ce cas particulier, il
+%% faut observer le code~{\LambdaCode} produit par une référence à une
+%% valeur externe au module courant comme dans le cas de la définition~$6$
+%% de la section~\ref{sec:overview} dans la figure~\ref{fig:hash}.
+%% %
+%% %% \begin{ocaml}
+%% %% let rev l = List.fold_left (fun acc x -> x :: acc) [] l
+%% %% \end{ocaml}
+%% %% \noindent est traduit en:
+%% %% \begin{ocaml}
+%% %% (function l/88 (apply (field 20 (global Stdlib__list!))
+%% %%     (function acc/146 x/147 (makeblock 0 x/147 acc/146)) 0a l/88))
+%% %% \end{ocaml}
+%% %
+%% Pour accéder à la fermeture de~\iocaml{List.fold_left}, il faut
+%% extraire le champ~$20$ du module \iocaml{Stdlib.List}. Oublier ce
+%% dernier identificateur est une approximation trop grossière de
+%% la sémantique.
+
+pour finir cette section, il faut remarquer qu'il n'est pas pertinent
 de garder tous les glyphes des sous-termes dans l'empreinte finale.
 En effet, nous avons vu que la fonction de clustering utilise le
 multi-ensemble des empreintes des sous-arbres pour identifier les
@@ -174,8 +199,8 @@ codes "proches". Comme nous travaillons en s'abstrayant les constantes
 (c'est-à-dire que toutes les constantes ont le même glyphe), presque
 tous les arbres partagent ces empreintes. Nous ne pouvons donc pas
 conserver les empreintes de tous les sous-arbres.
-
-Une approche est de ne conserver que les empreintes des "gros"
+%
+Une approche consiste à ne conserver que les empreintes des "gros"
 sous-arbres, afin d'éviter la pollution induite par les empreintes des
 feuilles. La définition même de "gros" étant sujette à cautions, nous proposons deux possibilités:
 \begin{itemize}
