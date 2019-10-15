@@ -157,7 +157,7 @@ d'utiliser intensivement la fonction de hachage cryptographique
 MD5. Pour chaque n{\oe}ud de l'arbres, on calcule une clé de hachage
 qui s'appuie sur le nom de la construction utilisée et, pour procéder
 incrémentalement~\cite{DBLP:conf/ml/FilliatreC06}, sur les clés de
-hachage des sous-arbres.
+hachage des sous-arbres prise dans l'ordre, de gauche à droite.
 
 Dans un programme, la valeur d'un litéral est très souvent liée au
 contexte d'application. Du point de vue de la recherche de redondance, nous
@@ -190,3 +190,19 @@ Pour accéder à la fermeture de~\iocaml{List.fold_left}, il faut
 extraire le champ~$20$ du module \iocaml{Stdlib.List}. Oublier ce
 dernier identificateur est une approximation trop grossière de
 la sémantique.
+
+Pour finir cette section, il faut remarquer qu'il n'est pas pertinent
+de garder tous les glyphes des sous-termes dans l'empreinte finale.
+En effet, nous avons vu que la fonction de clustering utilise le
+multi-ensemble des empreintes des sous-arbres pour identifier les
+codes "proches". Comme nous travaillons en s'abstrayant les constantes
+(c'est-à-dire que toutes les constantes ont le même glyphe), presque
+tous les arbres partagent ces empreintes. Nous ne pouvons donc pas
+conserver les empreintes de tous les sous-arbres.
+
+Une approche est de ne conserver que les empreintes des "gros"
+sous-arbres, afin d'éviter la pollution induite par les empreintes des
+feuilles. Nous proposons donc de ne retenir que les empreintes des
+sous-arbres ayant au moins un certain pourcentage~$p$ de nœuds comparé à
+au nombre de nœuds de l'arbre tout entier. Ce pourcentage~$p$ est un
+paramètre global de~{\Asak}.

@@ -1,43 +1,90 @@
 %!TEX root = root.tex
 
 \subsection{Motivation}
-Une centaine d'étudiants de troisième année suivent le cours de programmation fonctionnelle. Ils ont 2 heures de travaux pratiques par semaine. Comment le professeur peut-il (humainement) analyser les réponses aux exercices de la semaine ?
+Une centaine d'étudiants de troisième année suivent le cours de
+programmation fonctionnelle. Ils ont deux heures de travaux pratiques
+par semaine. Comment le professeur peut-il (humainement) analyser les
+réponses aux exercices de la semaine ?
 
-L'utilisation de {\LearnOCaml} est déjà d'une grande aide: la correction automatique des exercices permet de voir les pourcentages de réussite de chaque étudiant. Cela pose cependant un problème: environ 80\% des étudiants ont eu tous les points ! Il s'agit maintenant de comprendre \emph{comment} les étudiants ont répondu; c'est-à-dire de comparer leur code.
+L'utilisation de {\LearnOCaml}~\cite{learnocaml} est déjà d'une grande
+aide car la correction automatique des exercices permet de voir les
+pourcentages de réussite de chaque étudiant. Malheureusement cela ne
+suffit pas pour comprendre s'ils ont bien travaillé car environ 80\%
+des étudiants obtiennent tous les points ! Il s'agit maintenant de
+comprendre \emph{comment} les étudiants ont répondu; c'est-à-dire de
+comparer le code source qu'ils ont produits.
 
-Nous avons donc intégré {\Asak} à {\LearnOCaml} afin de classifier les codes des étudiants. En observant les représentants des classes obtenues et leur taille, le professeur peut ainsi se faire une idée en très peu de temps de la façon dont les élève ont répondu, ainsi qu'identifier les élèves qui ont fournis une réponse tout à fait distincte des autres et nécessitent peut-être plus d'attention.
+Nous avons donc intégré {\Asak} à {\LearnOCaml} afin de classifier les
+codes des étudiants. En observant les représentants des classes
+obtenues et leur taille, le professeur peut ainsi se faire une idée en
+très peu de temps de la façon dont les élève ont répondu, ainsi
+qu'identifier les élèves qui ont fournit une réponse tout à fait
+inattendue et nécessitent peut-être plus d'attention.
 
 \subsection{Approche utilisée}
-Partant de l'hypothèse que les tests automatiques ont été bien écrits, nous classifions une première fois les codes selon la note qu'ils ont obtenu. En effet, nous ne voulons jamais identifier deux codes qui n'ont pas eu la même note, même s'ils sont similaire syntaxiquement. Cette première passe nous permet aussi d'avoir pour chaque classe une hypothèse, très forte, d'équivalence sémantique.
-Cette hypothèse nous permet de raffiner la fonction de calcul d'empreinte afin d'identifier encore plus de codes.
+Partant de l'hypothèse que les tests automatiques ont été bien écrits,
+nous classifions une première fois les codes selon la note qu'ils ont
+obtenu. En effet, nous ne voulons jamais identifier deux codes qui
+n'ont pas eu la même note, même s'ils sont similaires
+syntaxiquement. Cette première passe nous permet aussi d'avoir pour
+chaque classe une hypothèse, très forte, d'équivalence sémantique.
+Cette hypothèse nous permet de raffiner la fonction de calcul
+d'empreinte afin d'identifier encore plus de codes.
 
 \subsubsection{Amélioration de la fonction de calcul d'empreinte}
-La fonction de calcul d'empreinte capture la forme de l'arbre et quelques plusieurs autres informations qui peuvent ici être réinterprétées.
+La fonction de calcul d'empreinte capture la forme de l'arbre et
+quelques plusieurs autres informations qui peuvent ici être
+réinterprétées.
 
 \paragraph{La combinaison des empreintes}
-Pour calculer l'empreinte d'un nœud, nous calculons en fait l'empreinte de la liste des empreintes de ses fils (avec l'ajout d'un sel propre au nœud en question). L'ordre des empreintes dans cette liste importe la plupart du temps. Mais ici, notre hypothèse  d'équivalence sémantique permet d'assurer que l'ordre n'importe pas. En effet, si c'était le cas, les codes auraient une sémantique différente. Nous trions donc toutes les listes d'empreintes selon un ordre arbitraire avant de les combiner.
+Comme nous l'avons vu précédemment, la clé de hachage d'un
+terme~$\LambdaCode$ est déduite des clés de hachage de ses sous-termes
+\textit{combinées dans l'ordre, de gauche à droite}. Dans cette
+situation, deux termes équivalents sémantiquement et qui ne diffèrent
+que par l'ordre de certains sous-termes ne sont pas envoyés vers la
+même empreinte. Pour résoudre ce problème, nous avons modifié notre
+fonction de prise d'empreintes pour qu'elle trie les empreintes des
+sous-termes avant de les combiner. Trier ou non les sous-empreintes
+est désormais un paramètre de~{\Asak}.
 
 \paragraph{L'empreinte des feuilles}
-Nous avons déjà soulevé le problème du calcul des empreintes des feuilles de l'arbre en Section \am{TODO Insérer une référence à la section correspondante}. Dans ce contexte d'équivalence sémantique, nous pouvons supposer que dans deux arbres de même forme, les identifiants ne sont que des alias les uns des autres. En effet, s'il existait une différence sémantique entre deux identifiants, les deux codes n'auraient pas la même sémantique.
-Nous avons donc choisi d'associer la même empreinte à tous les identifiants.
-
-\subsubsection{Quelles empreintes conserver ?}
-
-Nous avons vu que la fonction de clustering utilise la liste des empreintes des sous-arbres pour identifier les codes "proches". Mais quelles empreintes doit-on conserver ? Comme nous travaillons en abstrayant les constantes (c'est-à-dire que toutes les constantes ont la même empreinte), presque tous les arbres partagent des empreintes. Nous ne pouvons donc pas conserver les empreintes de tous les sous-arbres.
-
-Une approche est de ne conserver que les empreintes des "gros" sous-arbres, afin d'éviter la pollution induite par les empreintes des feuilles. Nous proposons donc de ne retenir que les empreintes des sous-arbres ayant au moins un certain pourcentage de nœuds comparé à au nombre de nœuds de l'arbre tout entier.
+Nous avons déjà soulevé le problème du calcul des empreintes des
+feuilles de l'arbre en section~\ref{sec:fingerprint}. Dans ce contexte
+d'équivalence sémantique, nous pouvons supposer que dans deux arbres
+de même forme, les identifiants ne sont que des alias les uns des
+autres. En effet, s'il existait une différence sémantique entre deux
+identifiants, les deux codes n'auraient pas la même sémantique.  Nous
+avons donc choisi d'associer la même empreinte à tous les
+identifiants. \yrg{C'est vraiment violent!}
 
 \subsection{Résultats}
 
-Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus gros: celui des réponses des étudiants de troisième année à la question "implémentez la fonction ~\iocaml{rev}". 154 codes ont eu tous les points. Sur ces codes, {\Asak} produit 9 classes:
+Les exemples de la figure \ref{fig:hash} sont tirés d'un corpus plus
+gros: celui des réponses des étudiants de troisième année à la
+question "Implémentez la fonction~\iocaml{rev}". $154$~réponses ont
+obtenu tous les points. Sur ce corpus, {\Asak} produit $9$~classes
+dont voici les cardinaux et une description succinte:
 
-\begin{enumerate}
-\item 95 étudiants: Les codes ajoutant le premier élément à la fin du reste de la liste renversée récursivement.
-\item 41 étudiants: Les codes définissant une fonction auxiliaire récursive terminale.
-\item 5 étudiants : Les codes utilisant une fonction auxiliaire non-locale.
-\item 4 étudiants: Les codes stockant le résultat de l'appel récursif dans une variable avant d'ajouter le premier élément à la fin.
-\item 3 étuditants : Les codes utilisant ~\iocaml{List.rev}
-\item 3 étudiants: Les codes utilisant ~\iocaml{List.fold_left}
-\item 2 étudiants: Les codes utilisant ~\iocaml{List.fold_right}
-\item 1 étudiant: Les codes utilisant une structure ~\iocaml{if then else} au lieu du filtrage par motif.
-\end{enumerate}
+\begin{itemize}
+\item $95$: le premier élément est mis à la fin du reste de la liste renversée récursivement.
+\item $41$: la réponse introduit une fonction auxiliaire récursive terminale.
+\item $5$ : la réponse utilise une fonction auxiliaire non-locale.
+\item $4$ : le résultat de l'appel récursif dans une référence et ajoute le premier élément à la fin.
+\yrg{Alexandre, j'ai bien compris ce que tu avais dit autrement?}
+\item $3$ : la réponse utilise~\iocaml{List.rev}.
+\item $3$ : la réponse s'appuie sur~\iocaml{List.fold_left}.
+\item $2$ : la réponse s'appuie sur~\iocaml{List.fold_right}.
+\item $1$ : la réponse utilise un \iocaml{if-then-else} au lieu du filtrage par motifs.
+\end{itemize}
+
+L'enseignant peut déduire plusieurs choses de ce rapport. D'abord que
+la plupart des étudiants n'ont pas encore acquis le réflexe d'écrire
+des fonctions sur les listes dont la récursion est en position
+terminale. Il peut constater aussi qu'une minorité d'étudiants
+n'arrive pas encore à se détacher du paradigme impératif ou à utiliser
+l'analyse de motifs plutôt qu'une expression conditionnelle. Enfin,
+l'enseignant devra aussi revenir sur son code de correction automatique
+qui ne capture pas le cas de triche -- pourtant grossier -- où l'étudiant
+esquive l'exercice en réutilisant la fonction~\iocaml{List.rev}.
+
+
