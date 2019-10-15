@@ -95,7 +95,7 @@ terme peut diverger ou produire des effets de bord incontrôlés.
 %
 Par contre, le compilateur sait détecter des définitions locales
 très simples dont l'expansion ne pose pas de problème. Ces définitions
-sont marquées par une annotation :
+sont marquées par une annotation du type suivant :
 
 \begin{ocaml}
 type let_kind = Strict | Alias | StrictOpt | Variable
@@ -110,7 +110,7 @@ signifie que la définition dépend de la mémoire et ne peut donc pas
 masquée dans la suite. Notre normalisation réduit les
 définitions \iocaml{Strict} simples et les \iocaml{Alias} ce qui
 nous permet d'égaliser des termes sources qui sont équivalents modulo
-le dépliage des définitions.\footnote{Notons que cette normalisation
+le dépliage de ces définitions.\footnote{Notons que cette normalisation
 peut changer la complexité ce qui d'un certain point de vue ne préserve
 pas la sémantique intentionnelle du programme source. Dans nos
 expérimentations, ces considérations ne se sont pas montrées pertinentes
@@ -119,13 +119,9 @@ cependant.}
 \subsection{Définition de la prise d'empreintes}
 \label{sec:fingerprint}
 
-Nous présentons maintenant précisément la notion d'empreinte que nous
-avons choisie et la fonction qui la calcule pour tout
-terme~$\LambdaCode$ (normalisé par les réécritures décrites dans les
-deux sections précédentes). Comme nous l'expliquerons dans la
-section~\ref{sec:related-work}, notre méthode est une variante d'un
-calcul d'empreinte de la littérature~\cite{chilowicz:hal-00627811}.
-
+Notre méthode de prise d'empreintes est une variante d'un calcul
+d'empreinte de la littérature~\cite{chilowicz:hal-00627811}.
+%
 L'empreinte d'un arbre de syntaxe doit témoigner de la structure de
 cet arbre ainsi que de l'ensemble des sous-arbres qui la constitue. Pour
 des raisons d'efficacité, nous réduisons chaque sous-arbre à un entier
