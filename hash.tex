@@ -150,9 +150,7 @@ On appelle \textit{$f$-empreinte d'un arbre de syntaxe}~$t$, le
 multi-ensemble~$E_f(t)$ formé des $f$-glyphes de ses sous-arbres.
 \end{defn}
 
-Il reste maintenant à décider quelle fonction de hachage utiliser.  En
-nous appuyant sur les conclusions de~Chilowicz et ses
-coauteurs~\cite{chilowicz:hal-00627811}, nous avons décidé d'utiliser
+Il reste maintenant à décider quelle fonction de hachage utiliser. Ne nous intéressant pas à des questions de sécurité, nous avons décidé d'utiliser
 intensivement la fonction de hachage cryptographique MD5. Pour chaque
 n{\oe}ud de l'arbres, on calcule une clé de hachage qui s'appuie sur
 le nom de la construction utilisée et, pour procéder
