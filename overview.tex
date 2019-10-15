@@ -1,20 +1,21 @@
-Dans cette section, nous décrivons l'architecture de notre outil sur
-un corpus d'exemple. Nous expliquons nos choix de conception par la
-même occasion.
+Dans cette section, nous décrivons le fonctionnement de notre outil
+sur un corpus d'exemple et nous expliquons certains de nos choix de
+conception par la même occasion.
 
 \input{revs}
 
 \paragraph{Que produit {\Asak}?}
-{\Asak} cherche à comparer entre elles des définitions globales.  La
-figure~\ref{fig:example:sources} contient cinq exemples de telles
-définitions {\OCaml}. Elles forment un corpus jouet qui va nous servir
-à illustrer le fonctionnement d'{\Asak}.  Le lecteur aura reconnu d'un
-coup d'{\oe}il la fonction classique qui renvoie la liste mirroir
-d'une liste prise en argument et l'enseignant aura reconnnu des
-réponses typiques d'étudiants apprenti-programmeurs fonctionnels.
+{\Asak} compare entre elles les définitions globales d'un ensemble de
+modules {\OCaml}. La figure~\ref{fig:example:sources} contient cinq
+exemples de telles définitions {\OCaml}. Elles forment un corpus jouet
+qui va nous servir à illustrer le fonctionnement d'{\Asak}.  Le
+lecteur aura reconnu d'un coup d'{\oe}il la fonction classique qui
+renvoie la liste mirroir d'une liste prise en argument et l'enseignant
+aura reconnnu des réponses typiques d'étudiants apprenti-programmeurs
+fonctionnels. Sur ce corpus, notre outil produit l'ensemble de
+dendrogrammes de la figure~\ref{fig:toy-classes}.
 
-Sur ce corpus, notre outil produit l'ensemble de dendrogrammes suivants~:
-
+\begin{figure}
 \begin{center}
 \begin{tikzpicture}[sloped, scale=0.5]
 \node (a)  at (-6,0)   {1};
@@ -47,17 +48,22 @@ Sur ce corpus, notre outil produit l'ensemble de dendrogrammes suivants~:
 \draw[->,-triangle 60] (-7,0) -- node[above]{dissimilarité} (-7,6);
 \end{tikzpicture}
 \end{center}
+\caption{Ensemble de dendrogrammes correspond à la classification du corpus jouet.}
+\label{fig:toy-classes}
+\end{figure}
 
 Un dendrogramme est un arbre binaire dont les n{\oe}uds représentent
-des classes d'individus. Les feuilles de ce dendrogramme sont les
+des classes d'individus. Les feuilles de ces dendrogrammes sont les
 différentes versions de \texttt{rev}. Un dendrogramme fournit un
 partitionnement hiérarchique d'un ensemble d'invididus: en le
 parcourant d'une feuille vers sa racine, on découvre des classes
 d'invididus de plus en plus dissimilaires à cette feuille ; en le
 parcourant de sa racine vers ses feuilles, on découvre des séparations
-successives en deux classes d'un ensemble d'individus maximisant
-la dissimilarité entre les membres des deux classes. \yrg{Formulation
-un peu lourde et peut-être incorrecte. Alexandre, tu peux m'aider?} \am{Peut-être peut-on expliquer en utilisant la construction même de l'arbre: Choisissant pour distance entre deux arbres le maximum des dissimilarités entre leurs feuilles, on construit le dendrogramme en commençant avec un collection de feuilles puis en agglomérant les arbres les plus proches. Ainsi, plus deux feuilles ont un parent proche, plus elles sont similaires comparé aux autres feuilles.}
+successives en deux classes d'un ensemble d'individus maximisant la
+dissimilarité entre les membres des deux classes. Dans la sortie
+de notre outil, deux classes qui appartiennent à deux dendrogrammes
+distincts sont absolument dissimilaires, i.e. elles n'ont rien en
+commun.
 
 Dans le cas de ce corpus, le regroupement des définitions~$1$ et~$2$
 est très naturel puisque ces deux définitions sont équivalentes à
@@ -107,10 +113,10 @@ Une fois que l'on a décidé de travailler sur un langage d'arbres
 distincts de la syntaxe concrète, il faut choisir ce nouveau langage.
 On aurait pu choisir de traduire les termes sources vers un langage
 conçu pour l'occasion mais ce serait beaucoup de travail. Il existe
-heureusement le langage intermédiaire {\LambdaCode} dans le
-compilateur et nos expérimentations nous portent à croire qu'il se
-place au bon niveau d'abstraction pour capturer la structure
-calculatoire du programme source.
+heureusement un langage intermédiaire adéquat dans le
+compilateur~{\OCaml}: le langage {\LambdaCode}. Nos expérimentations
+nous portent à croire qu'il se place au bon niveau d'abstraction pour
+capturer l'essence de la structure calculatoire du programme source.
 
 Ce langage sera présenté précisément dans la section~\ref{sec:lambda}
 mais nous pouvons d'ores et déjà donner la traduction du corpus jouet
@@ -131,14 +137,13 @@ remarques similaires s'appliquent aux autres définitions.
 Comparer deux arbres en itérant sur leurs structures respectives a un
 coût proportionnel à leur taille. Par ailleurs, la notion de
 comparaison qui nous intéresse doit idéalement savoir comparer
-l'ensemble des sous-arbres des deux arbres pour déterminer à quel
-point ils sont construits avec des ingrédients similaires, i.e.  quelle
+l'ensemble des sous-arbres des deux arbres pour déterminer quelle
 quantité de code ils ont en commun. L'ordre d'apparition des
 sous-arbres n'est donc pas forcément important : bien entendu, deux
-arbres utilisant les mêmes sous-arbres dans le même ordre seront
-très similaires mais utiliser les mêmes sous-arbres dans un ordre
-différent est aussi une forme de similarité non négligeable même
-si elle est un peu moins forte.
+arbres utilisant les mêmes sous-arbres dans le même ordre seront très
+similaires mais utiliser les mêmes sous-arbres dans un ordre différent
+est aussi une forme de similarité non négligeable même si elle est un
+peu moins forte.
 
 Après ces remarques, l'implémentation d'une fonction d'évaluation de
 la similarité entre deux termes $\LambdaCode$ semble difficile. Nous
@@ -170,7 +175,7 @@ ingrédients''. Les empreintes calculées pour les définitions de notre
 corpus jouet se trouvent dans la figure~\ref{fig:hash}. On distingue
 la liste numérotée des clés de hachage dans la partie haute de la figure.
 En bas de la figure, on trouve les empreintes des définitions, ce sont
-des multi-ensembles de paires d'entiers. Dans cette figure, l'entier
+des (multi-)ensembles de paires d'entiers. Dans cette figure, l'entier
 du haut est le numéro de clé de hachage et l'entier du  bas est le
 nombre de n{\oe}uds de l'arbre de syntaxe du sous-terme haché.
 %

@@ -49,8 +49,7 @@ peut espérer détecter indirectement des redondances entre les
 définitions de types.
 %
 Un exemple d'une telle situation sera présentée
-et discutée dans la section~\ref{sec:} \yrg{Donner l'endroit où on
-discute de la fonction ``isomorphe'' à Option.map}.
+et discutée dans la section~\ref{sec:redundancy}.
 
 \paragraph{Absence de modules et de classes}
 Les constructions de seconde classe (comme les définitions de modules
@@ -73,13 +72,16 @@ analyses à~$3$ branches sur le type \iocaml{color = Red | Black |
 l'analyse\footnote{En supposant qu'il n'y a pas de clause
   \iocaml{when} en jeu.}, celles-ci vont être traduites vers des
 branchements à $3$ cas où l'ordre des cas correspond à l'ordre des
-constructeurs de données dans la définition du type.
+constructeurs de données dans la définition du type. Il s'agit donc
+encore une fois d'une simplification favorable des termes sources
+puisqu'elle envoie des termes sources syntaxiquement distincts mais
+sémantiquement équivalents vers un unique terme~$\LambdaCode$.
 
 \subsubsection{$\alpha$-renommage}
 
 Le nom des variables est pris en compte lors de la prise d'empreintes.
 Naturellement, nous avons choisi de nous abstraire de ces noms en
-détectant la redondance $\alpha$-équivalence près. Il est donc
+détectant la redondance à $\alpha$-équivalence près. Il est donc
 important de s'assurer que les noms de variables liées (par exemple
 lors d'une définition de fonction) ne jouent aucun rôle. Pour cette
 raison, nous renommons tous les identificateurs des variables liées en
@@ -100,21 +102,19 @@ type let_kind = Strict | Alias | StrictOpt | Variable
 \end{ocaml}
 
 \noindent \iocaml{Strict} signifie que la définition peut faire
-des effets de bord et ne doit pas être réduite (sauf s'il s'agit
-d'une variable ou d'une constante) ; \iocaml{Alias} signifie que
-la définition est pure et peut donc être réduite ; \iocaml{StrictOpt}
+des effets de bord et ne doit pas être réduite (sauf s'il s'agit d'une
+variable ou d'une constante) ; \iocaml{Alias} signifie que la
+définition est pure et peut donc être réduite ; \iocaml{StrictOpt}
 signifie que la définition dépend de la mémoire et ne peut donc pas
 être réduite ; \iocaml{Variable} signifie que la définition sera
-masquée dans la suite. \yrg{Le cas Variable me semble un peu étrange
-et je ne suis pas sûr de comprendre à quoi il sert...}
-
-\yrg{Appliquer ces expansions peut changer la complexité des programmes.
-Est-il raisonnable de toutes les appliquer? Pourquoi l'expansion est
-une bonne idée?}
-
-\am{La complexité n'est pas mon problème ici, il s'agit juste d'une technique "légale" pour identifier plus de codes (et surtout des codes pouvant être factorisés, quitte à prendre le plus rapide)}
-
-\yrg{Section à terminer}
+masquée dans la suite. Notre normalisation réduit les
+définitions \iocaml{Strict} simples et les \iocaml{Alias} ce qui
+nous permet d'égaliser des termes sources qui sont équivalents modulo
+le dépliage des définitions.\footnote{Notons que cette normalisation
+peut changer la complexité ce qui d'un certain point de vue ne préserve
+pas la sémantique intentionnelle du programme source. Dans nos
+expérimentations, ces considérations ne se sont pas montrées pertinentes
+cependant.}
 
 \subsection{Définition de la prise d'empreintes}
 \label{sec:fingerprint}
@@ -127,7 +127,7 @@ section~\ref{sec:related-work}, notre méthode est une variante d'un
 calcul d'empreinte de la littérature~\cite{chilowicz:hal-00627811}.
 
 L'empreinte d'un arbre de syntaxe doit témoigner de la structure de
-cet arbre ainsi que l'ensemble des sous-arbres qui la constitue. Pour
+cet arbre ainsi que de l'ensemble des sous-arbres qui la constitue. Pour
 des raisons d'efficacité, nous réduisons chaque sous-arbre à un entier
 correspondant à son image par une fonction de hachage. Par ailleurs,
 plus un sous-arbre a un grand nombre de n{\oe}uds et plus sa
@@ -147,13 +147,15 @@ comme suit.
 
 \begin{defn}
 On appelle \textit{$f$-empreinte d'un arbre de syntaxe}~$t$, le
-multi-ensemble~$E_f(t)$ formé des $f$-glyphes de ses sous-arbres.
+multi-ensemble~$E_f(t)$ formé des $f$-glyphes de ses sous-arbres
+et de lui-même.
 \end{defn}
 
-Il reste maintenant à décider quelle fonction de hachage utiliser. Ne nous intéressant pas à des questions de sécurité, nous avons décidé d'utiliser
-intensivement la fonction de hachage cryptographique MD5. Pour chaque
-n{\oe}ud de l'arbres, on calcule une clé de hachage qui s'appuie sur
-le nom de la construction utilisée et, pour procéder
+Il reste maintenant à décider quelle fonction de hachage utiliser. Ne
+nous intéressant pas à des questions de sécurité, nous avons décidé
+d'utiliser intensivement la fonction de hachage cryptographique
+MD5. Pour chaque n{\oe}ud de l'arbres, on calcule une clé de hachage
+qui s'appuie sur le nom de la construction utilisée et, pour procéder
 incrémentalement~\cite{DBLP:conf/ml/FilliatreC06}, sur les clés de
 hachage des sous-arbres.
 
@@ -163,3 +165,28 @@ estimons que ces valeurs constituent une forme de bruit à ignorer.
 Pour que la valeur exacte des litéraux n'influence pas notre recherche
 de redondance, nous avons donc décidé de ne pas prendre en compte leurs
 valeurs dans le calcul de la clé de hachage.
+
+Il y a un cas particulier où {\Asak} n'ignore pas la valeur d'un
+litéral : lorsqu'un litéral est pris en argument de la primitive
+\iocaml{GetField} sa valeur est prise en compte dans le calcul de la
+clé de hachage. Pour comprendre ce qui motive ce cas particulier, il
+faut observer le code~{\LambdaCode} produit par une référence à une
+valeur externe au module courant comme dans le cas de la définition~$6$
+de la section~\ref{sec:overview}:
+
+\begin{ocaml}
+let rev l =
+  List.fold_left (fun acc x -> x :: acc) [] l
+\end{ocaml}
+
+\noindent est traduit en:
+
+\begin{ocaml}
+(function l/88 (apply (field 20 (global Stdlib__list!))
+    (function acc/146 x/147 (makeblock 0 x/147 acc/146)) 0a l/88))
+\end{ocaml}
+
+Pour accéder à la fermeture de~\iocaml{List.fold_left}, il faut
+extraire le champ~$20$ du module \iocaml{Stdlib.List}. Oublier ce
+dernier identificateur est une approximation trop grossière de
+la sémantique.
