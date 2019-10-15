@@ -118,64 +118,13 @@ dans la figure~\ref{fig:lambda-corpus}. Pour réaliser cette
 traduction, nous réutilisons la partie avant du compilateur~{\OCaml}
 et nous effectuons un post-traitement qui normalise encore un peu plus
 les termes. Les détails de cette traduction seront décrits dans la
-section~\ref{sec:lambda-normalization}. Sur nos exemples, on peut déjà
+section~\ref{sec:lambda}. Sur nos exemples, on peut déjà
 remarquer que les définitions~$1$ et~$2$ sont identiques une fois
 normalisées. On note aussi que la définition~$3$ normalisée partage
 des sous-termes avec les définitions~$1$ et $2$ normalisées. Des
 remarques similaires s'appliquent aux autres définitions.
 
-\begin{figure}
-\begin{lisp}
-Définition 1: (function l/88
-  (if l/88
-    (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
-      (makeblock 0 (field 0 l/88) 0a))
-    0a))
-
-Définition 2: (function l/88
-  (if l/88
-    (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
-      (makeblock 0 (field 0 l/88) 0a))
-    0a))
-
-Définition 3: (function l/88
-  (catch
-    (if l/88
-      (if (field 1 l/88)
-        (apply (field 36 (global Stdlib!)) (apply rev/87 (field 1 l/88))
-          (makeblock 0 (field 0 l/88) 0a))
-        (exit 12))
-      (exit 12))
-   with (12) l/88))
-
-Définition 4: (function l/88
-  (letrec
-    (rev_aux/89
-       (function acc/90 l/91
-         (if l/91
-           (apply rev_aux/89 (makeblock 0 (field 0 l/91) acc/90)
-             (field 1 l/91))
-           acc/90)))
-    (apply rev_aux/89 0a l/88)))
-
-Définition 5: (function l/88
-  (if l/88
-    (letrec
-      (rev2/91
-         (function x/92 y/93
-           (if y/93
-             (apply rev2/91 (makeblock 0 (field 0 y/93) x/92) (field 1 y/93))
-             x/92)))
-      (apply rev2/91 0a l/88))
-    0a))
-
-Définition 6: (function l/88
-  (apply (field 20 (global Stdlib__list!))
-    (function acc/146 x/147 (makeblock 0 x/147 acc/146)) 0a l/88))
-\end{lisp}
-\caption{Traduction du corpus dans le code {\LambdaCode} du compilateur~\OCaml.}
-\label{fig:lambda-corpus}
-\end{figure}
+\input{lambda-corpus}
 
 \paragraph{Pourquoi calcule-t-on des empreintes?}
 
@@ -183,8 +132,8 @@ Comparer deux arbres en itérant sur leurs structures respectives a un
 coût proportionnel à leur taille. Par ailleurs, la notion de
 comparaison qui nous intéresse doit idéalement savoir comparer
 l'ensemble des sous-arbres des deux arbres pour déterminer à quel
-point ils sont construits avec des ingrédients similaires, i.e.  à
-quel point ils ont du code en commun. L'ordre d'apparition des
+point ils sont construits avec des ingrédients similaires, i.e.  quelle
+quantité de code ils ont en commun. L'ordre d'apparition des
 sous-arbres n'est donc pas forcément important : bien entendu, deux
 arbres utilisant les mêmes sous-arbres dans le même ordre seront
 très similaires mais utiliser les mêmes sous-arbres dans un ordre
@@ -198,7 +147,7 @@ implémentation et aussi pour la rendre efficace. Les empreintes sont
 des ensembles de clés de hachages des sous-termes (suffisamment gros)
 du terme $\LambdaCode$. L'idée importante de cette notion d'empreinte
 est de prendre en compte l'ordre relatif des sous-termes dans le
-calcul de la clé de hachage mais de voir l'empreinte comme un ensemble
+calcul de la clé de hachage tout en regardant aussi l'empreinte comme un ensemble
 de clés pour maintenir une certaine proximité entre les termes qui
 utilisent les mêmes sous-termes, mais dans un ordre différent. Ainsi,
 les deux programmes suivants:
