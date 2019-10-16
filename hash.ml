@@ -158,7 +158,7 @@ let hashes =
            Printf.sprintf "\n\\end{array}\\\\\n"
            ^ Printf.sprintf "\\begin{array}{rcl}\n"
          ) else "")^
-         Printf.sprintf "%02d &=& %s \\\\" i (string_of_hash h))
+         Printf.sprintf "%02d &=& \\texttt{%s} \\\\" i (string_of_hash h))
   |> String.concat "\n"
   |> output_string stdout;
   Printf.printf "\n\\end{array}\\\\\n\\]";
