@@ -1,0 +1,161 @@
+> 2: (accept)
+> Ce papier propose une méthode pour partionner automatiquement des
+> ensembles de définitions écrites en OCaml. Les auteurs proposent une
+> implémentation de cette méthode avec l'outil Asak.
+>
+> L'analyseur prend en entrée le Lambda du code OCaml: une forme
+> intermédiaire obtenu à la compilation permettant d'atteindre une forme
+> normale satisfaisante et qui s'abstrait des constructions plus
+> haut-niveau du langage. Les auteurs définissent une adaption d'un
+> calcul d'empreinte issu de la littérature se basant sur le calcul d'un
+> hash de certains des noeuds de l'AST. Cette technique permet d'obtenir
+> un ensemble de dendrogrammes: des arbres binaires regroupant les
+> partitions similaires de manière hiérarchique. Également, une
+> définition de dissimilarité est donnée qui permet de construire ces
+> dendrogrammes.
+>
+> Les auteurs valident leur approche par deux expérimentations. La
+> première s'intéresse à l'analyse de code d'étudiants permettant
+> d'aggréger les différentes solutions données en exhibant les
+> différentes méthodes utilisées par les étudiants. La deuxième
+> expérimentation est plus globale et s'intéresse à analyser les
+> bibliothèques disponible via OPAM.
+>
+> Le papier est bien rédigé et agréable à lire. Les différentes étapes
+> sont claires et bien présentées. Il aurait été intéressant de
+> développer davantage les travaux futurs. Bien que difficile, il serait
+> intéressant d'introduire un peu de sémantique dans
+> l'analyse. Notamment pour l'aspect normalisation: on pourrait vouloir
+> abstraire de l'ordre des arguments lors de la définition de fonctions
+> par exemple lors de l'application d'opérateurs commutatifs. Une
+> heuristique possible pour déterminer de bons "gros" sous-arbres
+> pourrait être de réutiliser les évenements de débogage introduits par
+> ocamldebug lors de la compilation avec l'option -g.
+
+Rien à faire.
+
+> Review 2
+> Overall evaluation:
+> 3: (strong accept)
+> Cette soumission présente un outil de détection de similarités dans
+> des programmes OCaml, évalué sur deux cas d'usage : (1) la
+> classification des soumissions d'étudiants sur un exercice sur la
+> plateforme Learn-OCaml, avec groupement par grande classes de
+> solutions, et (2) la recherche de définitions dupliquées dans un grand
+> corpus de programmes OCaml. L'approche proposée est de calculer une
+> "empreinte" des définitions toplevel qui contienne, grosso-modo, un
+> ensemble des hashs de ses sous-termes représentatifs; de calculer la
+> dissimilarité entre termes en comparant ces empreintes, et de grouper
+> les programmes en un arbre binaire de classes de programmes de plus en
+> plus proches. Les empreintes sont calculées sur la représentation
+> intermédiaire Lambda, proposée pour effacer des différences
+> syntaxiques effacées pendant la transformation du source vers
+> Lambda. L'outil résultat est évalué sur ces deux cas d'usages; il est
+> efficace pour grouper les solutions des étudiants à une question
+> simple, et trouve des redondances intéressantes (par exemple, la
+> fonction Option.map récrite dans chaque projet OCaml de taille
+> moyenne) sur un corpus de programmes issu d'OPAM.
+>
+> J'ai trouvé ce travail complet, intéressant et bien décrit; je
+> recommande fortement de l'accepter aux JFLA.
+>
+> Côté critique, je dirais que l'approche par "hash de sous-termes" ne
+> m'a pas complètement convaincu, dans le sens où elle donne de bons
+> résultats mais semble aussi avoir un certain nombre de défauts (trop
+> grande sensibilité à de petits changements), qui ont donné lieu à un
+> certain nombre d'heuristiques et un espace de configuration compliqué
+> pour cet outil (on lit souvent: "on peut faire soit X ou Y, (on ne
+> sait pas trop lequel est le mieux donc) c'est un choix de
+> configuration global pour Asak". Le problème est intéressant et bien
+> posé, la solution est bien décrite, les résultats sont déjà
+> intéressants, mais ça n'est pas la seule approche qui sera la base de
+> tous les travaux futurs sur ce problème. On peut toujours se demander
+> s'il est possible de faire encore mieux, en ajoutant moins de petites
+> modifications pour améliorer les résultats, avec une approche assez
+> différente. Je dirais donc que la deuxième contribution, "extension du
+> fingerprinting d'arbre aux lambda-termes", est celle qui m'a le moins
+> convaincu parmi les contributions listées; l'idée clé d'utiliser les
+> De Bruijn pour travailler modulo alpha-équivalence est convaincante,
+> mais le reste (le choix de transformations pour améliorer les
+> résultats) est un peu de la cuisine plutôt qu'une extension
+> "naturelle" des arbres aux programmes.
+>
+> Ci-dessous, les remarques plus mineures.
+>
+> Page 3:
+>
+> > cette classification produit des dendrogrammes
+>
+> présenter brièvement ce qu'est un dendrogramme ici (c'est dit plus
+> bas, "un arbre binaire dont les nœuds représentent des classes
+> d'individus")
+
+
+
+>
+>
+> Page 6:
+>
+> > Les partitionnements ascendants sont adaptés aux corpus formés de
+> > petits groupes [...]. Nous avons fait l'hypothèse que les groupes de
+> > définitions similaires sont petits par rapport au corpus.
+>
+> Je trouve la description un peu abstraite. S'il y a de la place, il
+> pourrait être bon d'expliciter ce que sont les "corpus" et les
+> "groupes" dans l'un des cas d'usages d'Asak, pour avoir une idée plus
+> concrète de ce dont on parle.
+>
+> Si je comprends bien, l'hypothèse semble raisonnable pour la
+> reconnaissance a-posteriori d'opportunités de factorization sur des
+> corpus de code OCaml (OPAM ou la base de code d'un projet), mais moins
+> pertinente sur les solutions d'élèves sur un exercice
+> simple. (J'imagine que ça ne change pas beaucoup la pertinence de la
+> classification, qui a l'air de bien marcher quand même sur des
+> exemples avec peu de classes.)
+>
+>
+> Page 8:
+>
+> > Expression étiquetée
+> > Expression étiquetée
+>
+> Il y a répétition des mentions pour "try" et "statictry". Par
+> ailleurs, dans la règle `try t with n -> t`, on s'attendrait à avoir
+> un nom de variable `x` plutôt qu'un entier `n` (typo ?).
+>
+>
+> Page 9:
+>
+> > Réduction des définitions locales inoffensives
+>
+> Une optimisation symmétrique serait de réduire les `staticcatch` dont
+> l'action de sortie est de petite taille. Le compilateur de
+> pattern-matching utilise `staticcatch` pour éviter de dupliquer du
+> code, mais cela pour conséquence que deux programmes équivalents dont
+> l'enchaînement des patterns est un peu différent peuvent avoir une
+> structure de contrôle assez différente.
+>
+> # function Some x, Some y -> true | _ -> false;;
+> (function param/425
+> (funct-body
+> (let (*match*/426 =a (field 0 param/425))
+> (catch
+> (if *match*/426
+> (let (*match*/427 =a (field 1 param/425))
+> (if *match*/427 1a (exit 6)))
+> (exit 6))
+> with (6) 0a))))
+> # function Some x, Some y -> true | None, _ -> false | _, None -> false;;
+> (function param/431
+> (funct-body
+> (let (*match*/432 =a (field 0 param/431))
+> (if *match*/432
+> (let (*match*/433 =a (field 1 param/431))
+> (if *match*/433 1a 0a))
+> 0a))))
+>
+> Page 10:
+>
+> Il est triste d'utiliser encore MD5 aujourd'hui. À votre place
+> j'aurais un peu honte et je retirerais ce paragraphe.
+>
