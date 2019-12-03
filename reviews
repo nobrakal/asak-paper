@@ -90,7 +90,7 @@ Rien à faire.
 > bas, "un arbre binaire dont les nœuds représentent des classes
 > d'individus")
 
-
+DONE
 
 >
 >
@@ -104,6 +104,9 @@ Rien à faire.
 > pourrait être bon d'expliciter ce que sont les "corpus" et les
 > "groupes" dans l'un des cas d'usages d'Asak, pour avoir une idée plus
 > concrète de ce dont on parle.
+
+DONE
+
 >
 > Si je comprends bien, l'hypothèse semble raisonnable pour la
 > reconnaissance a-posteriori d'opportunités de factorization sur des
