@@ -125,6 +125,9 @@ DONE
 > Il y a répétition des mentions pour "try" et "statictry". Par
 > ailleurs, dans la règle `try t with n -> t`, on s'attendrait à avoir
 > un nom de variable `x` plutôt qu'un entier `n` (typo ?).
+
+DONE
+
 >
 >
 > Page 9:
@@ -156,9 +159,14 @@ DONE
 > (let (*match*/433 =a (field 1 param/431))
 > (if *match*/433 1a 0a))
 > 0a))))
+
+IGNORED.
+
 >
 > Page 10:
 >
 > Il est triste d'utiliser encore MD5 aujourd'hui. À votre place
 > j'aurais un peu honte et je retirerais ce paragraphe.
 >
+
+IGNORED. (Même pas honte!)
