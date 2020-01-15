@@ -134,7 +134,7 @@ la clé de hachage par ce nombre de n{\oe}uds.
 On appelle $f$-\textit{glyphe d'un arbre de syntaxe}~$t$, le
 couple~$H_f(t)$ formé d'un entier 63 bits correspondant à son nombre
 de n{\oe}uds et d'un entier 128-bits correspondant à l'image de cet
-arbre à travers une fonction de hachage~$f$ donnée. Pour un glype~$g$
+arbre à travers une fonction de hachage~$f$ donnée. Pour un glyphe~$g$
 donné, on note son poids~$w(g)$ et sa clé de hachage~$h(g)$.
 \end{defn}
 
@@ -155,10 +155,10 @@ qui s'appuie sur le nom de la construction utilisée et, pour procéder
 incrémentalement~\cite{DBLP:conf/ml/FilliatreC06}, sur les clés de
 hachage des sous-arbres prise dans l'ordre, de gauche à droite.
 
-Dans un programme, la valeur d'un litéral est très souvent liée au
+Dans un programme, la valeur d'un littéral est très souvent liée au
 contexte d'application. Du point de vue de la recherche de redondance, nous
 estimons que ces valeurs constituent une forme de bruit à ignorer.
-Pour que la valeur exacte des litéraux n'influence pas notre recherche
+Pour que la valeur exacte des littéraux n'influence pas notre recherche
 de redondance, nous avons donc décidé de ne pas prendre en compte leurs
 valeurs dans le calcul de la clé de hachage.
 
@@ -201,8 +201,8 @@ sous-arbres, afin d'éviter la pollution induite par les empreintes des
 feuilles. La définition même de "gros" étant sujette à cautions, nous
 proposons deux possibilités: (i) ne retenir que les empreintes des
 sous-arbres ayant au moins un certain pourcentage~$p$ de nœuds comparé
-au nombre de nœuds de l'arbre tout entier (utile quand on ne connait
-pas à-priori la taille des définitions étudiées) ; ou bien (ii) ne
+au nombre de nœuds de l'arbre tout entier (utile quand on ne connaît
+pas a priori la taille des définitions étudiées) ; ou bien (ii) ne
 retenir que les empreintes des sous-arbres ayant un nombre~$n$ de
-nœuds (utile quand on ne s'intéresse qu'aux fonctions dont on connait
+nœuds (utile quand on ne s'intéresse qu'aux fonctions dont on connaît
 la taille). Il s'agit d'un paramètre global de~{\Asak}.

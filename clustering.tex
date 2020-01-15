@@ -47,7 +47,7 @@ d'empreintes et que l'on garde trace de ces fusions pour pouvoir
 produire un dendrogramme par classe.
 
 \begin{ocaml}
-(* Types pour les classes d'empreintes et les partionnements. *)
+(* Types pour les classes d'empreintes et les partitionnements. *)
 type cluster and clustering
 (* L'opération de fusion. *)
 val merge : cluster -> cluster -> clustering -> clustering
@@ -117,7 +117,7 @@ s'appuie sur les quatre étapes suivants :
   \yrg{Pourquoi pas constant en copiant tout dans une matrice?}
   la valeur de $d(X, Y)$.
 \item
-  On calcule ensuite une surapproximation du partionnement : à l'aide
+  On calcule ensuite une surapproximation du partitionnement : à l'aide
   d'une structure de type \textit{Union-Find}, on regroupe les
   empreintes qui ont une interdissimilarité finie. On sépare ainsi
   les empreintes qui ne pourront jamais être dans la même classe car
@@ -126,7 +126,7 @@ s'appuie sur les quatre étapes suivants :
     enlever le log si ma remarque précédente a du sens.}
 \item
   Pour finir, l'algorithme de partitionnement naïf est exécuté en
-  parallèle sur toutes les classes du partionnement sur-approximé.
+  parallèle sur toutes les classes du partitionnement sur-approximé.
   Cette étape a un coût cubique en la taille de chaque partition, ce
   qui réduit significativement le temps d'exécution de l'algorithme
   car, sur nos exemples, la cardinalité des classes ne dépasse

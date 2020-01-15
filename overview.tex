@@ -7,8 +7,8 @@ modules {\OCaml}. La figure~\ref{fig:example:sources} contient cinq
 exemples de telles définitions {\OCaml}. Elles forment un corpus jouet
 qui va nous servir à illustrer le fonctionnement d'{\Asak}.  Le
 lecteur aura reconnu d'un coup d'{\oe}il la fonction classique qui
-renvoie la liste mirroir d'une liste prise en argument et l'enseignant
-aura reconnnu des réponses typiques d'étudiants apprenti-programmeurs
+renvoie la liste miroir d'une liste prise en argument et l'enseignant
+aura reconnu des réponses typiques d'étudiants apprenti-programmeurs
 fonctionnels. Sur ce corpus, notre outil produit l'ensemble de
 dendrogrammes de la figure~\ref{fig:toy-classes}.
 \input{revs}
@@ -52,7 +52,7 @@ dendrogrammes de la figure~\ref{fig:toy-classes}.
 Un dendrogramme est un arbre binaire dont les n{\oe}uds représentent
 des classes d'individus. Les feuilles de ces dendrogrammes sont les
 différentes versions de \texttt{rev}. Un dendrogramme fournit un
-partitionnement hiérarchique d'un ensemble d'invididus: en le
+partitionnement hiérarchique d'un ensemble d'individus: en le
 parcourant d'une feuille vers sa racine, on découvre des classes
 d'invididus de plus en plus dissimilaires à cette feuille ; en le
 parcourant de sa racine vers ses feuilles, on découvre des séparations
@@ -191,8 +191,9 @@ partitionnements ascendants et les partitionnements descendants. Les
 partitionnements ascendants sont adaptés aux corpus formés de petits
 groupes tandis que les partitionnements descendants à ceux formés de
 grands groupes. Nous avons fait l'hypothèse que les groupes de
-définitions similaires sont petits par rapport au corpus et nous avons
-donc choisi un algorithme de partitionnement hiérarchique ascendant.
+définitions similaires sont petits par rapport au corpus analysé et
+nous avons donc choisi un algorithme de partitionnement hiérarchique
+ascendant.
 
 L'algorithme procède donc en partant d'un partitionnement où chaque
 individu est dans une classe distincte de celles des autres et choisit
