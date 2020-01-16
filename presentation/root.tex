@@ -3,7 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[french]{babel}
-\usepackage{minted}
+\usepackage[outputdir=_build/]{minted}
 \usepackage{tikz}
 \usepackage{multicol}
 \usepackage{verbatim}
@@ -29,7 +29,7 @@
 	\title{Détection de définitions OCaml similaires}
 	\subtitle{(ou comment ne plus voir double à dos de chameau)}
 	%\logo{}
-	\institute{Université de Paris}
+	\institute{Université de Paris -- IRIF -- INRIA $\pi.r^2$ -- Fondation OCaml}
 	\date{Vendredi 31 janvier 2020}
 	%\subject{}
 	%\setbeamercovered{transparent}
@@ -39,27 +39,23 @@
 	\end{frame}
 
 \section{Introduction}
-\begin{frame}
-	\frametitle{Un peu de contexte}
-	\begin{itemize}
-		\item Sous la supervision de Yann Régis-Gianas (IRIF).
-		\item Merci la fondation OCaml.
-	\end{itemize}
-\end{frame}
 
 \section{Overview}
 \subsection{LearnOCaml}
 \begin{frame}
-	\frametitle{Un problème de professeurs}
-
-Comment analyser les 150 copies hebdomadaires du cours de programmation fonctionnelle ?
+	\frametitle{Le supplice des professeurs}
+\begin{center}
+\Large
+Comment analyser les 150 copies hebdomadaires \\ du cours de programmation fonctionnelle ?
+\end{center}
 \pause
-
+\bigskip
 \begin{itemize}
 \item Utiliser LearnOCaml.
 \pause
-\item Mais 75\% des élèves ont tout bon.
-\item Comment appréhender \emph{le raisonnement} de l'élève ?
+\item Mais 75\% des élèves ont tout juste.
+\item Comment appréhender \emph{le raisonnement} de l'élève pour mieux comprendre leurs
+  difficultés et leur proposer des exercices adaptés?
 \end{itemize}
 \end{frame}
 
@@ -119,12 +115,14 @@ let rev l =
 \begin{frame}[fragile]
 	\frametitle{Asak à la rescousse}
 	\begin{itemize}
-		\item Nous avons développé une librairie qui suit cette méthodologie.
-		\item asak: \url{https://github.com/nobrakal/asak}
+		\item Asak, une bibliothèque qui suit cette méthodologie:
+		\begin{center}
+                  \url{https://github.com/nobrakal/asak}
+                \end{center}
 		\item Disponible sur OPAM et intégrée dans LearnOCaml.
-		\item Qui produit des \emph{dendrogrammes} à partir d'un corpus.
+		\item Elle produit des \emph{dendrogrammes} à partir d'un corpus.
 	\end{itemize}
-
+\bigskip
 \begin{figure}
 	\begin{center}
 		\begin{tikzpicture}[sloped, scale=0.4]
@@ -183,7 +181,7 @@ Comment capturer la "forme" des fonctions ?
 \item Une solution: \alert{utiliser Lambda}.
 	\begin{itemize}
 	\item Un langage intermédiaire de la compilation d'OCaml.
-	\item Une sort de $\lambda$-calcul amélioré.
+	\item Un $\lambda$-calcul enrichi.
 	\item Plus concis que l'AST d'OCaml.
 	\item Contient plus de sémantique.
 \end{itemize}
@@ -194,10 +192,10 @@ Comment capturer la "forme" des fonctions ?
 \begin{frame}
 \frametitle{Un problème d'arbre}
 \begin{itemize}
-\item "Même" arbres Lambda $\iff$ Fonctions identiques
+\item "Mêmes" arbres Lambda $\sim$ fonctions identiques
 \item Comment capturer la forme des arbres ?
 \pause
-\item Via leurs \emph{empreintes}.
+\item[$\Rightarrow$] via leurs \emph{empreintes}.
 \end{itemize}
 \end{frame}
 
@@ -315,7 +313,7 @@ Des copiés-collés de \url{http://rosettacode.org/wiki/Levenshtein_distance#OCa
 \section{Détails techniques}
 
 \begin{frame}
-\frametitle{Analyse de l'approche}
+\frametitle{Principe de fonctionnement de l'approche}
 	\begin{enumerate}
 	\item Compiler le corpus vers Lambda.
 	\item Normaliser les arbres obtenus.
@@ -508,7 +506,9 @@ Mais (merci Gabriel Scherer), on peut le faire en $O(N^2 log N)$.
 \begin{frame}
 	\frametitle{Questions ?}
 	\begin{center}
-		Merci de votre attention !
+          \Large
+		Merci de votre attention ! \\
+                Merci à la Fondation OCaml !
 	\end{center}
 \end{frame}
 \end{document}
