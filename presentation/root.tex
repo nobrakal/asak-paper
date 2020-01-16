@@ -3,7 +3,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[french]{babel}
-\usepackage[outputdir=_build/]{minted}
+\usepackage{minted}
 \usepackage{tikz}
 \usepackage{multicol}
 \usepackage{verbatim}
@@ -63,30 +63,34 @@ Comment analyser les 150 copies hebdomadaires \\ du cours de programmation fonct
 	\frametitle{Un exemple}
 	\framesubtitle{List.rev par des étudiants}
 
-\begin{figure}
 \begin{multicols}{2}
 \begin{tinyocaml}
+	
+	
 (* Code 1 *)
 let rec rev l = match l with
   [] -> []
   |t::q -> rev q@[t]
+
 (* Code 2 *)
 let rec rev l = match l with
   | [] -> []
   | a::t -> (rev t)@[a]
+
 (* Code 3 *)
 let rec rev l = match l with
   [] | [_] -> l
   | t::q -> rev q@[t];;
 \end{tinyocaml}
+\columnbreak
 \begin{tinyocaml}
 (* Code 4 *)
 let rev l=
-  let rec rev_aux acc l=
-    match l with
+  let rec rev_aux acc l= match l with
     |[]->acc
     |t::q->rev_aux (t::acc) q
   in rev_aux [] l
+
 (* Code 5 *)
 let rev l = match l with
   [] -> []
@@ -94,13 +98,13 @@ let rev l = match l with
     let rec rev2 x y = match y with
     [] -> x
     |b::z -> rev2 (b::x) z in rev2 [] l
+
 (* Code 6 *)
-let rev l =
-  List.fold_left
+let rev l = List.fold_left
     (fun acc x -> x :: acc) [] l
 \end{tinyocaml}
 \end{multicols}
-\end{figure}
+
 \end{frame}
 
 \begin{frame}
