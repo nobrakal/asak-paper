@@ -411,15 +411,30 @@ let f x =
 		\item On conserve les empreintes des sous-arbres.
 		\item Avec un poids: le nombre de nœuds.
 	\end{itemize}
+
+On a donc $E : Lambda \to Bag(\mathbb{N} \times \mathbb{N})$.\\
+NB: Il s'agit d'un multi-ensemble !
+\end{frame}
+
+\begin{frame}
+\tiny\input{hash-corpus.tex}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Plein de paramètres}
 	
 	\begin{itemize}
-		\item Que faire des feuilles ?
-		\item Comment calculer l'empreinte d'une liste d'empreinte ?
 		\item Combien de sous-empreintes conserver ?
+		\item Que faire des feuilles:
+		\begin{itemize}
+			\item Les constantes: Toutes la même empreinte.
+			\item Les variables: Empreinte basée sur leur nom.
+		\end{itemize}
+		\item Comment calculer l'empreinte d'une nœud:
+		\begin{itemize}
+			\item Normalement: L'ordre des sous-empreintes importe.
+			\item Sous une hypothèse d'équivalence sémantique: l'ordre n'importe pas !
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
