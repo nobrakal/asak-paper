@@ -366,12 +366,34 @@ function f/88 param/90
 \frametitle{Lambda \alert{normalisé}}
 \begin{itemize}
 	\item $\alpha$-renommage des variables locales (via indice de de Bruijn).
+\begin{multicols}{2}
+\begin{tikzpicture}[every node/.style = {shape=rectangle,
+	draw, align=center}]]
+\node {let x}
+child { node {f ()} }
+child { node {let y}
+  child {node {g x}}
+  child {node {x + y}}
+};
+\end{tikzpicture}
+\columnbreak
+\begin{tikzpicture}[sibling distance=5em, every node/.style = {shape=rectangle,
+	draw, align=center}]]
+\node {let \_1}
+child { node {f ()} }
+child { node {let \_2}
+	child {node {g \_1}}
+	child {node {\_2 + \_1}}
+};
+\end{tikzpicture}
+\end{multicols}
 	\item Réduction des définitions locales inoffensives:
 \begin{multicols}{2}
 \begin{ocaml}
 let f x =
   let u = 1 in u + x
 \end{ocaml}
+\columnbreak
 \begin{ocaml}
 let f x =
   1 + x
