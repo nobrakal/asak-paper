@@ -60,14 +60,21 @@ Comment analyser les 150 copies hebdomadaires \\ du cours de programmation fonct
 \end{itemize}
 \end{frame}
 
+\begin{frame}
+	\frametitle{Comment ferait un professeur un peu mécanique ?}
+	\begin{enumerate}
+		\item Regarder uniquement la "forme" des fonctions.
+		\item Identifier celles ayant exactement la même forme.
+		\item Essayer de trouver celles ayant des formes ressemblantes.
+	\end{enumerate}
+\end{frame}
+
 \begin{frame}[fragile]
 	\frametitle{Un exemple}
 	\framesubtitle{List.rev par des étudiants}
 
 \begin{multicols}{2}
 \begin{tinyocaml}
-	
-	
 (* Code 1 *)
 let rec rev l = match l with
   [] -> []
@@ -83,6 +90,30 @@ let rec rev l = match l with
   [] | [_] -> l
   | t::q -> rev q@[t];;
 \end{tinyocaml}
+\begin{figure}
+	\begin{center}
+		\begin{tikzpicture}[sloped, scale=0.4]
+		\node (a)  at (-6,0)   {1};
+		\node (b)  at (-5,0)   {2};
+		\node (ab) at (-5.5,1) {};
+		\node (c) at (-3,0) {3};
+		\node (abc) at (-4, 2) {};
+		\node (d) at (-2,0) {4};
+		\node (e) at (-1,0) {5};
+		\node (de) at (-1.5,2) {};
+		\node (f) at (0,0) {6};
+		
+		\draw  (a) |- (ab.center);
+		\draw  (b) |- (ab.center);
+		\draw  (ab) |- (abc.center);
+		\draw  (c)  |- (abc.center);
+		\draw  (d)  |- (de.center);
+		\draw  (e)  |- (de.center);
+		
+		\draw[->,-triangle 60] (-7,0) -- node[above]{dissimilarité} (-7,3);
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
 \columnbreak
 \begin{tinyocaml}
 (* Code 4 *)
@@ -108,15 +139,6 @@ let rev l = List.fold_left
 
 \end{frame}
 
-\begin{frame}
-	\frametitle{Comment ferait un professeur un peu mécanique ?}
-\begin{enumerate}
-\item Regarder uniquement la "forme" des fonctions.
-\item Identifier celles ayant exactement la même forme.
-\item Essayer de trouver celles ayant des formes ressemblantes.
-\end{enumerate}
-\end{frame}
-
 \begin{frame}[fragile]
 	\frametitle{Asak à la rescousse}
 	\begin{itemize}
@@ -128,32 +150,7 @@ let rev l = List.fold_left
 		\item Elle produit des \emph{dendrogrammes} à partir d'un corpus.
 	\end{itemize}
 \bigskip
-\begin{figure}
-	\begin{center}
-		\begin{tikzpicture}[sloped, scale=0.4]
-		\node (a)  at (-6,0)   {1};
-		\node (b)  at (-5,0)   {2};
-		\node (ab) at (-5.5,1) {};
-		\node (c) at (-3,0) {3};
-		\node (abc) at (-4, 2) {};
-		\node (d) at (-2,0) {4};
-		\node (e) at (-1,0) {5};
-		\node (de) at (-1.5,2) {};
-		\node (f) at (0,0) {6};
-		
-		\draw  (a) |- (ab.center);
-		\draw  (b) |- (ab.center);
-		\draw  (ab) |- (abc.center);
-		\draw  (c)  |- (abc.center);
-		\draw  (d)  |- (de.center);
-		\draw  (e)  |- (de.center);
-		
-		\draw[->,-triangle 60] (-7,0) -- node[above]{dissimilarité} (-7,3);
-		\end{tikzpicture}
-	\end{center}
-\end{figure}
-
-	\pause
+\pause
 	Asak vient aussi avec:
 	\begin{itemize}
 		\item Des outils pour compiler tout le dépôt OPAM et y analyser la redondance.
