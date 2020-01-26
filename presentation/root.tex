@@ -184,6 +184,10 @@ Comment capturer la "forme" des fonctions ?
 	\begin{itemize}
 	\item Un langage intermédiaire de la compilation d'OCaml.
 	\item Un $\lambda$-calcul enrichi.
+\end{itemize}
+\pause
+\item Avantages:
+\begin{itemize}
 	\item Plus concis que l'AST d'OCaml.
 	\item Issue d'une première passe de compilation.
 \end{itemize}
@@ -444,12 +448,12 @@ Attention, il s'agit d'un multi-ensemble !
 	\frametitle{Plein de paramètres}
 	
 	\begin{itemize}
-		\item Combien de sous-empreintes conserver ?
 		\item Que faire des feuilles:
 		\begin{itemize}
 			\item Les constantes: Toutes la même empreinte.
 			\item Les variables: Empreinte basée sur leur nom.
 		\end{itemize}
+		\item Combien de sous-empreintes conserver ?
 		\item Comment calculer l'empreinte d'une nœud:
 		\begin{itemize}
 			\item Normalement: L'ordre des sous-empreintes importe.
@@ -513,7 +517,7 @@ let clustering fs =
 	
 \pause 
 	
-Si mal implémenté, cet algorithme est $O(N^3)$ !\\
+Si mal implémenté, cet algorithme est en $O(N^3)$ !\\
 Mais (merci Gabriel Scherer), on peut le faire en $O(N^2 log N)$.
 \end{frame}
 
