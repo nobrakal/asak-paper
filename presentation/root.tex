@@ -9,10 +9,11 @@
 \usepackage{verbatim}
 \usepackage{tikz}
 \usetikzlibrary{arrows}
+\usetikzlibrary{tikzmark}
 
 \usetheme{default}
 
-\newminted[myocaml]{ocaml}{texcl=true}
+\newminted[myocaml]{ocaml}{texcl=true, escapeinside=??}
 \newenvironment{ocaml}
 {\small\VerbatimEnvironment
 	\begin{myocaml}}
@@ -370,40 +371,44 @@ function f/88 param/90
 \frametitle{Lambda \alert{normalisé}}
 \begin{itemize}
 	\item $\alpha$-renommage des variables locales (via indice de de Bruijn).
-\begin{multicols}{2}
-\begin{tikzpicture}[every node/.style = {shape=rectangle,
+\begin{center}
+\begin{tikzpicture}[sibling distance=5em, every node/.style = {shape=rectangle,
 	draw, align=center}]]
-\node {let x}
+\node (A) at (-5,0) {let x}
 child { node {f ()} }
 child { node {let y}
   child {node {g x}}
   child {node {x + y}}
 };
-\end{tikzpicture}
-\columnbreak
-\begin{tikzpicture}[sibling distance=5em, every node/.style = {shape=rectangle,
-	draw, align=center}]]
-\node {let \_1}
+
+\node (B) at (0,0) {let \_1}
 child { node {f ()} }
 child { node {let \_2}
 	child {node {g \_1}}
 	child {node {\_2 + \_1}}
 };
+
+\draw[thick,red,->,>=latex] (A) -- (B);
 \end{tikzpicture}
-\end{multicols}
+\end{center}
 	\item Réduction des définitions locales inoffensives:
+	
 \begin{multicols}{2}
 \begin{ocaml}
-let f x =
+let f x =             ?\tikzmark{A}?
   let u = 1 in u + x
 \end{ocaml}
 \columnbreak
 \begin{ocaml}
-let f x =
-  1 + x
+?\tikzmark{B}?  let f x =
+    1 + x
 \end{ocaml}
 \end{multicols}
 \end{itemize}
+
+\begin{tikzpicture}[remember picture]
+\draw[auto=right,overlay,thick,red,->,>=latex] (pic cs:A) -- (pic cs:B);
+\end{tikzpicture}
 \end{frame}
 
 \subsection{Prises d'empreintes}
